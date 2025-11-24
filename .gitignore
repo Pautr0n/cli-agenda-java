@@ -1,0 +1,25 @@
+# Archivos de Java
+*.class
+*.log
+
+# Carpetas de compilación
+target/
+out/
+bin/
+
+# IntelliJ
+.idea/
+*.iml
+.idea
+
+# VS Code
+.vscode/
+
+# Sistema operativo
+.DS_Store
+
+# Maven Wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+# Docker
+*.pid
