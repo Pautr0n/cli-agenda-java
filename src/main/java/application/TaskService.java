@@ -26,12 +26,12 @@ public class TaskService {
         }
 
         if(priority == null){
-            priority = PriotiryType.MIDDLE;
+            priority = PriorityType.MIDDLE;
 
         }
 
         Task task = new Task();
-        task.setTittle(title);
+        task.setTitle(title);
         task.setContent(text);
         task.setCreationDate(LocalDateTime.now());
         task.setExpirationDate(expireDate);
@@ -81,7 +81,7 @@ public class TaskService {
 
         }
         if (title != null && title.isBlank()){
-            task.setTittle(title);
+            task.setTitle(title);
         }
 
         if(expirationDate != null){
