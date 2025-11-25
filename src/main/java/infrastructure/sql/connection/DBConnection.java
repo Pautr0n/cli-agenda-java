@@ -1,3 +1,5 @@
+package infrastructure.sql.connection;
+
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
