@@ -1,25 +1,11 @@
-# Archivos de Java
-*.class
-*.log
-
-# Carpetas de compilación
-target/
-out/
-bin/
-
-# IntelliJ
-.idea/
-*.iml
-.idea
-
-# VS Code
-.vscode/
-
-# Sistema operativo
+# macOS
 .DS_Store
 
-# Maven Wrapper
-.mvn/wrapper/maven-wrapper.jar
+# IntelliJ IDEA
+.idea/
+*.iml
 
-# Docker
-*.pid
+# Archivos compilados
+/out/
+/bin/
+*.class
