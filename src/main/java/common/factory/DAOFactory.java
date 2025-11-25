@@ -1,5 +1,6 @@
 package common.factory;
 
+import com.mongodb.client.MongoDatabase;
 import common.dao.GenericDAO;
 import infrastructure.memory.factory.MemoryDAOFactory;
 import infrastructure.mongodb.factory.MongoDBDAOFactory;
