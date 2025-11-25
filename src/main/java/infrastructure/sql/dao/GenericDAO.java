@@ -1,7 +1,5 @@
 package infrastructure.sql.dao;
 
-import task.model.Task;
-
 import java.sql.SQLException;
 import java.util.List;
 

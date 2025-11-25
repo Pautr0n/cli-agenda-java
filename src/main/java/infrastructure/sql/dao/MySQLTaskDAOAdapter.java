@@ -60,7 +60,7 @@ public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
     }
 
     @Override
-    public List findAll() throws SQLException {
+    public List<Task> findAll() throws SQLException {
         String sql = "SELECT * FROM tasks";
         List<Task> tasks = new ArrayList<>();
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
