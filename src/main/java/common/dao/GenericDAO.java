@@ -4,13 +4,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface GenericDAO<T> {
-    void insert(T entity) throws SQLException;
+    void insert(T entity);
 
-    T findById(int id) throws SQLException;
+    T findById(int id);
 
-    List<T> findAll() throws SQLException;
+    List<T> findAll();
 
-    void update(T entity) throws SQLException;
+    void update(T entity);
 
-    void delete(int id) throws SQLException;
+    void delete(int id);
 }
