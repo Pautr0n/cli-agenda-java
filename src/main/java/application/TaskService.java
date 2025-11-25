@@ -9,17 +9,17 @@ import java.time.LocalDateTime;
 
 public class TaskService {
 
-    private final TaskRepository repository;
+    private final TaskRepository taskRepository;
 
-    public TaskService(TaskRepository taskrepository){
-        this.repository = taskRepository;
+    public TaskService(TaskRepository taskRepository){
+        this.taskRepository = taskRepository;
 
     }
 
     //CRUD
 
     // 1.Create
-    public void addTask(String tittle, Content text, LocalDate expireDate, PriorityType priority,Task task){
+    public void addTask(String title, String text, LocalDate.parse(expireDate), PriorityType priority){
 
         if(text == null || text.isBlank()){
             throw new IllegalArgumentException("You have to enter a task.");
@@ -31,10 +31,10 @@ public class TaskService {
         }
 
         Task task = new Task();
-        task.setTittle(tittle);
+        task.setTittle(title);
         task.setContent(text);
         task.setCreationDate(LocalDateTime.now());
-        task.setExpirationDate(LocalDateTime);
+        task.setExpirationDate(expireDate);
         task.setPriority(priority);
         task.setDoneStatus(DoneType doneStatus);
 
@@ -45,7 +45,7 @@ public class TaskService {
     }
 
     //Read ALL
-    public List<Task> getAllTasks()throws SQLDataException {
+    public List<Task> getAllTasks() throws SQLDataException {
         return taskRepository.getAllTasks();
     }
 
@@ -71,17 +71,17 @@ public class TaskService {
 
     }
 
-    public void updateTask(int id, Contenxt text, String tittle, LocalDateTime expirationDate, PriorityType priority)throws SQLException{
+    public void updateTask(int id, String text, String title, LocalDateTime expirationDate, PriorityType priority) throws SQLException{
         Task task = taskRepository.getTask(id);
         if(task == null){
             throw new IllegalArgumentException("The task with id "+id+" does not exists");
         }
-        if(text != null && !text.trim().isEmpty()){
+        if(text != null && !text.isBlank()){
             task.setContent(text);
 
         }
-        if (titlle != null && tittle.isBlank()){
-            task.setTittle(tittle);
+        if (title != null && title.isBlank()){
+            task.setTittle(title);
         }
 
         if(expirationDate != null){
