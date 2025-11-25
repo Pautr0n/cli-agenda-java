@@ -15,71 +15,72 @@ public class Task {
     private PriorityType priority;
     private DoneType doneStatus;
 
-    public Task(String title, String content, LocalDate expirationDate) {
-
-        if (title == null || title.isBlank()) {   // maravilla el isblank para que nadie ingrese epsacios vacios.
-            throw new IllegalArgumentException("El título de la tarea no puede estar vacío");
-        }
-        if (content == null || content.isBlank()) {
-            throw new IllegalArgumentException("El contenido no puede estar vacío");
-        }
-
-        this.title = title;
-        this.content = content;
-        this.expirationDate = expirationDate;
-        this.creationDate = LocalDate.now();
-        this.priority = PriorityType.MEDIUM;
-        this.doneStatus = DoneType.NOTDONE;
-    }
-
-
     public Task(String title, String content, LocalDate expirationDate, PriorityType priority) {
 
-        if (title == null || title.isBlank()) {
-            throw new IllegalArgumentException("El título de la tarea no puede estar vacío");
-        }
-        if (content == null || content.isBlank()) {
-            throw new IllegalArgumentException("El contenido no puede estar vacío");
-        }
 
         this.title = title;
         this.content = content;
         this.expirationDate = expirationDate;
         this.creationDate = LocalDate.now();
-        this.priority = (priority != null) ? priority : PriorityType.MEDIUM;
+        this.priority = priority;
         this.doneStatus = DoneType.NOTDONE;
     }
 
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public String getContent() {
+        return content;
     }
 
     public void setContent(String content) {
         this.content = content;
     }
 
+    public LocalDate getExpirationDate() {
+        return expirationDate;
+    }
+
     public void setExpirationDate(LocalDate expirationDate) {
         this.expirationDate = expirationDate;
+    }
+
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public PriorityType getPriority() {
+        return priority;
     }
 
     public void setPriority(PriorityType priority) {
         this.priority = priority;
     }
 
-    public void setDoneStatus(DoneType doneStatus) {
-        this.doneStatus = doneStatus;
+    public DoneType getDoneStatus() {
+        return doneStatus;
     }
 
-
-    @Override
-    public String toString() {
-        return "\n***" + title.toUpperCase() + "***\n"
-                +"-"+ content + "\n" +
-                "-Día:" + expirationDate +"\n"+
-                "-Prioridad: " + priority + "\n"+
-                "-Estatus:  " + doneStatus +"\n"+
-                "-Tarea creada el día: " + creationDate +"\n";
+    public void setDoneStatus(DoneType doneStatus) {
+        this.doneStatus = doneStatus;
     }
 }
 
