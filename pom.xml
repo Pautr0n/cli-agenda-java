@@ -30,5 +30,10 @@
             <version>3.24.2</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>com.mysql-connector-j</artifactId>
+            <version>9.0.0</version>
+        </dependency>
     </dependencies>
 </project>
