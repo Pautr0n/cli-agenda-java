@@ -2,30 +2,20 @@ package task.model;
 
 import task.enums.DoneType;
 import task.enums.PriorityType;
-
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class Task {
 
     private Integer id;
     private String title;
     private String content;
-    private LocalDate expirationDate;
-    private LocalDate creationDate;
+    private LocalDateTime expirationDate;
+    private LocalDateTime creationDate;
     private PriorityType priority;
     private DoneType doneStatus;
 
-    public Task(String title, String content, LocalDate expirationDate, PriorityType priority) {
-
-
-        this.title = title;
-        this.content = content;
-        this.expirationDate = expirationDate;
-        this.creationDate = LocalDate.now();
-        this.priority = priority;
-        this.doneStatus = DoneType.NOTDONE;
+    public Task() {
     }
-
 
     public Integer getId() {
         return id;
@@ -51,19 +41,19 @@ public class Task {
         this.content = content;
     }
 
-    public LocalDate getExpirationDate() {
+    public LocalDateTime getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(LocalDate expirationDate) {
+    public void setExpirationDate(LocalDateTime expirationDate) {
         this.expirationDate = expirationDate;
     }
 
-    public LocalDate getCreationDate() {
+    public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(LocalDate creationDate) {
+    public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
     }
 
