@@ -1,11 +1,15 @@
 package task.service;
 
+import task.enums.DoneType;
+import task.enums.PriorityType;
+import task.model.Task;
 import task.repository.TaskRepository;
 
 import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class TaskService {
 
@@ -19,14 +23,15 @@ public class TaskService {
     //CRUD
 
     // 1.Create
-    public void addTask(String title, String text, LocalDate.parse(expireDate), PriorityType priority){
+    public void addTask(String title, String text, String expireDate, PriorityType priority){
+        LocalDate expireDateLocal = LocalDate.parse(expireDate);
 
         if(text == null || text.isBlank()){
             throw new IllegalArgumentException("You have to enter a task.");
         }
 
         if(priority == null){
-            priority = PriorityType.MIDDLE;
+            priority = PriorityType.MEDIUM;
 
         }
 
@@ -34,9 +39,9 @@ public class TaskService {
         task.setTitle(title);
         task.setContent(text);
         task.setCreationDate(LocalDateTime.now());
-        task.setExpirationDate(expireDate);
+        task.setExpirationDate(expireDateLocal);
         task.setPriority(priority);
-        task.setDoneStatus(DoneType doneStatus);
+        task.setDoneStatus(DoneType.NOTDONE);
 
         taskRepository.addTask(task);
         System.out.println("Task created with success");
@@ -64,7 +69,7 @@ public class TaskService {
             throw new IllegalArgumentException("The task with id "+id+" does not exists");
         }
 
-        task.setDoneStatus(DoneStatus.COMPLETE);
+        task.setDoneStatus(DoneType.DONE);
         taskRepository.updateTask(task);
         System.out.println("Task completed");
 

@@ -2,6 +2,8 @@ package task.model;
 
 import task.enums.DoneType;
 import task.enums.PriorityType;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Task {
@@ -9,7 +11,7 @@ public class Task {
     private Integer id;
     private String title;
     private String content;
-    private LocalDateTime expirationDate;
+    private LocalDate expirationDate;
     private LocalDateTime creationDate;
     private PriorityType priority;
     private DoneType doneStatus;
@@ -41,11 +43,11 @@ public class Task {
         this.content = content;
     }
 
-    public LocalDateTime getExpirationDate() {
+    public LocalDate getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(LocalDateTime expirationDate) {
+    public void setExpirationDate(LocalDate expirationDate) {
         this.expirationDate = expirationDate;
     }
 
