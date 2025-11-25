@@ -1,5 +1,7 @@
 package infrastructure.sql.dao;
 
+import common.dao.GenericDAO;
+import common.exception.DataAccessException;
 import task.enums.DoneType;
 import task.enums.PriorityType;
 import task.model.Task;
@@ -20,88 +22,108 @@ public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
 
 
     @Override
-    public void insert(Task entity) throws SQLException {
+    public void insert(Task entity) {
 
-        String sql = "INSERT INTO tasks (title, content, creation_date, expiration_date, priority, done_status) " +
-                "VALUES (?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setString(1, entity.getTitle());
-            statement.setString(2, entity.getContent());
-            statement.setTimestamp(3, Timestamp.valueOf(entity.getCreationDate()));
-            if (entity.getExpirationDate() != null) {
-                statement.setDate(4, Date.valueOf(entity.getExpirationDate()));
-            } else {
-                statement.setNull(4, Types.DATE);
-            }
-            statement.setString(5, entity.getPriority().name());
-            statement.setString(6, entity.getDoneStatus().name());
-            statement.executeUpdate();
+        try {
+            String sql = "INSERT INTO tasks (title, content, creation_date, expiration_date, priority, done_status) " +
+                    "VALUES (?, ?, ?, ?, ?, ?)";
+            try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                statement.setString(1, entity.getTitle());
+                statement.setString(2, entity.getContent());
+                statement.setTimestamp(3, Timestamp.valueOf(entity.getCreationDate()));
+                if (entity.getExpirationDate() != null) {
+                    statement.setDate(4, Date.valueOf(entity.getExpirationDate()));
+                } else {
+                    statement.setNull(4, Types.DATE);
+                }
+                statement.setString(5, entity.getPriority().name());
+                statement.setString(6, entity.getDoneStatus().name());
+                statement.executeUpdate();
 
-            ResultSet keys = statement.getGeneratedKeys();
-            if (keys.next()) {
-                entity.setId(keys.getInt(1));
+                ResultSet keys = statement.getGeneratedKeys();
+                if (keys.next()) {
+                    entity.setId(keys.getInt(1));
+                }
             }
+        } catch (SQLException e) {
+            throw new DataAccessException("Error inserting task", e);
         }
 
     }
 
 
     @Override
-    public Task findById(int id) throws SQLException {
-        String sql = "SELECT * FROM tasks WHERE id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-            if (rs.next()) {
-                return mapTask(rs);
+    public Task findById(int id) {
+        try {
+            String sql = "SELECT * FROM tasks WHERE id = ?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setInt(1, id);
+                ResultSet rs = statement.executeQuery();
+                if (rs.next()) {
+                    return mapTask(rs);
+                }
             }
+            return null;
+        } catch (SQLException e) {
+            throw new DataAccessException("Error finding task with id " + id, e);
         }
-        return null;
     }
 
     @Override
-    public List<Task> findAll() throws SQLException {
-        String sql = "SELECT * FROM tasks";
-        List<Task> tasks = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                tasks.add(mapTask(rs));
+    public List<Task> findAll() {
+
+        try {
+            String sql = "SELECT * FROM tasks";
+            List<Task> tasks = new ArrayList<>();
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                ResultSet rs = statement.executeQuery();
+                while (rs.next()) {
+                    tasks.add(mapTask(rs));
+                }
             }
+            return tasks;
+        } catch (SQLException e) {
+            throw new DataAccessException("Error finding all tasks.", e);
         }
-        return tasks;
     }
 
     @Override
-    public void update(Task entity) throws SQLException {
-        String sql = "UPDATE tasks SET title=?, content=?, expiration_date=?, priority=?, done_status=? WHERE id=?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, entity.getTitle());
-            statement.setString(2, entity.getContent());
+    public void update(Task entity){
 
-            if (entity.getExpirationDate() != null) {
-                statement.setDate(3, Date.valueOf(entity.getExpirationDate()));
-            } else {
-                statement.setNull(3, Types.DATE);
+        try{
+            String sql = "UPDATE tasks SET title=?, content=?, expiration_date=?, priority=?, done_status=? WHERE id=?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setString(1, entity.getTitle());
+                statement.setString(2, entity.getContent());
+
+                if (entity.getExpirationDate() != null) {
+                    statement.setDate(3, Date.valueOf(entity.getExpirationDate()));
+                } else {
+                    statement.setNull(3, Types.DATE);
+                }
+
+                statement.setString(4, entity.getPriority().name());
+                statement.setString(5, entity.getDoneStatus().name());
+                statement.setInt(6, entity.getId());
+                statement.executeUpdate();
             }
-
-            statement.setString(4, entity.getPriority().name());
-            statement.setString(5, entity.getDoneStatus().name());
-            statement.setInt(6, entity.getId());
-            statement.executeUpdate();
+        }catch (SQLException e) {
+            throw new DataAccessException("Error updating tasks with id " + entity.getId(), e);
         }
-
-
     }
 
     @Override
-    public void delete(int id) throws SQLException {
-        String sql = "DELETE FROM tasks WHERE id=?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, id);
-            statement.executeUpdate();
-        }
+    public void delete(int id){
 
+        try{
+            String sql = "DELETE FROM tasks WHERE id=?";
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setInt(1, id);
+                statement.executeUpdate();
+            }
+        }catch (SQLException e) {
+            throw new DataAccessException("Error deleting the task with id " + id, e);
+        }
     }
 
     private Task mapTask(ResultSet rs) throws SQLException {
