@@ -119,7 +119,8 @@ public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
             String sql = "DELETE FROM task WHERE id=?";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setInt(1, id);
-                statement.executeUpdate();
+                int rows = statement.executeUpdate();
+                if(rows==0) throw new DataAccessException("No task found with id " + id);
             }
         }catch (SQLException e) {
             throw new DataAccessException("Error deleting the task with id " + id, e);
