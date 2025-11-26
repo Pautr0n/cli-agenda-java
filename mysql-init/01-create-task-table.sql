@@ -6,6 +6,6 @@ CREATE TABLE IF NOT EXISTS task (
     expiration_date DATE NULL,
     creation_date DATETIME NOT NULL,
     priority ENUM('LOW', 'MEDIUM', 'HIGH') NOT NULL DEFAULT 'MEDIUM',
-    done_status ENUM('DONE', 'NOT_DONE') NOT NULL DEFAULT 'NOT_DONE'
+    done_status ENUM('DONE', 'NOTDONE') NOT NULL DEFAULT 'NOTDONE'
 );
 
