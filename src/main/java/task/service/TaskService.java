@@ -1,12 +1,11 @@
 package task.service;
 
+import common.exception.DataAccessException;
 import task.enums.DoneType;
 import task.enums.PriorityType;
 import task.model.Task;
 import task.repository.TaskRepository;
 
-import java.sql.SQLDataException;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -43,67 +42,95 @@ public class TaskService {
         task.setPriority(priority);
         task.setDoneStatus(DoneType.NOTDONE);
 
-        taskRepository.addTask(task);
+        taskRepository.add(task);
         System.out.println("Task created with success");
 
 
     }
 
     //Read ALL
-    public List<Task> getAllTasks() throws SQLDataException {
-        return taskRepository.getAllTasks();
+    public List<Task> getAll()  {
+        try {
+
+            return taskRepository.getAll();
+
+        }catch (Exception e){
+            throw new DataAccessException("Error retrieving task from database.",e);
+        }
     }
 
 
     // Read ONE
     public Task getTaskById(int id){
-        return taskRepository.findById(id);
+        return taskRepository.getById(id);
     }
 
     //Update
 
-    public void markTaskCompleted(int id) throws SQLException {
-        Task task = taskRepository.getTask(id);
+    public void markTaskCompleted(int id)  {
+        try {
+            Task task = taskRepository.getById(id);
 
-        if (task == null){
-            throw new IllegalArgumentException("The task with id "+id+" does not exists");
+            if (task == null) {
+                throw new IllegalArgumentException("The task with id " + id + " does not exists");
+            }
+
+            task.setDoneStatus(DoneType.DONE);
+            taskRepository.update(task);
+            System.out.println("Task completed");
+        }catch (Exception e){
+            throw new DataAccessException("Error marking task completed, (id="+id+")",e);
         }
-
-        task.setDoneStatus(DoneType.DONE);
-        taskRepository.updateTask(task);
-        System.out.println("Task completed");
 
 
     }
 
-    public void updateTask(int id, String text, String title, LocalDate expirationDate, PriorityType priority) throws SQLException{
-        Task task = taskRepository.getTask(id);
-        if(task == null){
-            throw new IllegalArgumentException("The task with id "+id+" does not exists");
-        }
-        if(text != null && !text.isBlank()){
-            task.setContent(text);
+    public void updateTask(Task updateTask) {
+        try {
 
-        }
-        if (title != null && title.isBlank()){
-            task.setTitle(title);
-        }
+            Task task = taskRepository.getById(updateTask.getId());
 
-        if(expirationDate != null){
-            task.setExpirationDate(expirationDate);
-        }
-        if(priority != null){
-            task.setPriority(priority);
-        }
+            if (task == null) {
+                throw new IllegalArgumentException("The task with id " + updateTask.getId() + " does not exist");
+            }
+            if (updateTask.getContent() != null && !updateTask.getContent().isBlank()) {
+                task.setContent(updateTask.getContent());
 
-        taskRepository.updateTask(task);
+            }
+            if (updateTask.getTitle() != null && !updateTask.getTitle().isBlank()) {
+                task.setTitle(updateTask.getTitle());
+            }
+
+            if (updateTask.getExpirationDate() != null) {
+                task.setExpirationDate(updateTask.getExpirationDate());
+            }
+            if (updateTask.getPriority() != null) {
+                task.setPriority(updateTask.getPriority());
+            }
+            if(updateTask.getDoneStatus() != null){
+                task.setDoneStatus(updateTask.getDoneStatus());
+            }
+
+            taskRepository.update(task);
+            System.out.println("Task updated successfully, id: "+updateTask.getId());
+
+        }catch (Exception e){
+            throw new DataAccessException("Error updating task with id: "+ updateTask.getId()+" ",e);
+        }
     }
 
     //Delete
 
-    public void deleteTask(int id)throws SQLException{
-        taskRepository.removeTask(id);
-        System.out.println("Task Deleted");
+    public void deleteTask(int id){
+        try{
+
+            taskRepository.remove(id);
+            System.out.println("Task Deleted");
+
+        }catch(Exception e){
+            throw new DataAccessException("Task not found in the database",e);
+        }
+
     }
 
 }
