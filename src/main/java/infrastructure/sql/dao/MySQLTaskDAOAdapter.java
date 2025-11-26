@@ -12,7 +12,7 @@ import java.util.List;
 
 public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
     //connection local variable must be implemented:
-    private Connection connection;
+    private final Connection connection;
 
     //Constructor must be provided:
 
