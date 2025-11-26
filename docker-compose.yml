@@ -5,7 +5,7 @@ services:
     container_name: agenda-mysql
     environment:
       MYSQL_ROOT_PASSWORD: pajoan
-      MYSQL_DATABASE: my_agend
+      MYSQL_DATABASE: agenda
     ports:
       - "3307:3306"
     volumes:
