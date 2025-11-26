@@ -76,7 +76,7 @@ public class TaskService {
 
     }
 
-    public void updateTask(int id, String text, String title, LocalDateTime expirationDate, PriorityType priority) throws SQLException{
+    public void updateTask(int id, String text, String title, LocalDate expirationDate, PriorityType priority) throws SQLException{
         Task task = taskRepository.getTask(id);
         if(task == null){
             throw new IllegalArgumentException("The task with id "+id+" does not exists");
@@ -102,7 +102,7 @@ public class TaskService {
     //Delete
 
     public void deleteTask(int id)throws SQLException{
-        taskRepository.delete(id);
+        taskRepository.removeTask(id);
         System.out.println("Task Deleted");
     }
 
