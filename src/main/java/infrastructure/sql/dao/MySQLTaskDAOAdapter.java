@@ -25,7 +25,7 @@ public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
     public void insert(Task entity) {
 
         try {
-            String sql = "INSERT INTO tasks (title, content, creation_date, expiration_date, priority, done_status) " +
+            String sql = "INSERT INTO task (title, content, creation_date, expiration_date, priority, done_status) " +
                     "VALUES (?, ?, ?, ?, ?, ?)";
             try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                 statement.setString(1, entity.getTitle());
@@ -55,7 +55,7 @@ public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
     @Override
     public Task findById(int id) {
         try {
-            String sql = "SELECT * FROM tasks WHERE id = ?";
+            String sql = "SELECT * FROM task WHERE id = ?";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setInt(1, id);
                 ResultSet rs = statement.executeQuery();
@@ -73,7 +73,7 @@ public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
     public List<Task> findAll() {
 
         try {
-            String sql = "SELECT * FROM tasks";
+            String sql = "SELECT * FROM task";
             List<Task> tasks = new ArrayList<>();
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 ResultSet rs = statement.executeQuery();
@@ -91,7 +91,7 @@ public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
     public void update(Task entity){
 
         try{
-            String sql = "UPDATE tasks SET title=?, content=?, expiration_date=?, priority=?, done_status=? WHERE id=?";
+            String sql = "UPDATE task SET title=?, content=?, expiration_date=?, priority=?, done_status=? WHERE id=?";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, entity.getTitle());
                 statement.setString(2, entity.getContent());
@@ -116,7 +116,7 @@ public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
     public void delete(int id){
 
         try{
-            String sql = "DELETE FROM tasks WHERE id=?";
+            String sql = "DELETE FROM task WHERE id=?";
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setInt(1, id);
                 statement.executeUpdate();
