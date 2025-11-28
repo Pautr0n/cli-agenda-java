@@ -1,6 +1,7 @@
 package task.mapper;
 
 import task.model.Task;
+import task.dto.TaskOutputDTO;
 
 public class TaskOutputMapper {
 

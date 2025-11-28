@@ -4,11 +4,13 @@ import common.exception.DataAccessException;
 import task.dto.*;
 import task.enums.DoneType;
 import task.enums.PriorityType;
+import task.mapper.TaskInputMapper;
+import task.mapper.TaskOutputMapper;
 import task.model.Task;
 import task.repository.TaskRepository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
 import java.util.List;
 
 
@@ -28,15 +30,15 @@ public class TaskService {
     // 1.Create
 
 
-    public TaskDTO createTask(TaskDTO dto){
+    public TaskOutputDTO createTask(TaskDTO dto){
 
         try{
             validateTaskDTOCreate(dto);
 
-            Task task = mapToTask(dto);
+            Task task = TaskInputMapper.toEntity(dto);
             taskRepository.add(task);
 
-            return mapToTaskDTO(task);
+            return TaskOutputMapper.toDTO(task);
 
         }catch(Exception e){
             throw new DataAccessException("Error creating a task",e);
@@ -44,29 +46,29 @@ public class TaskService {
     }
     //Read One
 
-    public TaskDTO getTaskById(TaskIdDTO idDto){
+    public TaskOutputDTO getTaskById(TaskIdDTO id){
         try {
-
-            Task task = taskRepository.getById(idDto.getId());
+            validateTaskId(id);
+            Task task = taskRepository.getById(id.id());
 
             if (task.getId() == null) {
-                throw new IllegalArgumentException("Task with id " + idDto + " not found");
+                throw new IllegalArgumentException("Task with id " + id.id() + " not found");
             }
 
-            return mapToTaskDTO(task);
+            return TaskOutputMapper.toDTO(task);
 
         }catch(Exception e){
-            throw new DataAccessException("Error retrieving task with id: "+idDto ,e);
+            throw new DataAccessException("Error retrieving task with id: "+id.id() ,e);
         }
     }
 
     //Read ALL
 
-    public List<TaskDTO> getAllTasks() {
+    public List<TaskOutputDTO> getAllTasks() {
         try {
 
             return taskRepository.getAll().stream()
-                    .map(this::mapToTaskDTO)
+                    .map(TaskOutputMapper::toDTO)
                     .toList();
 
         } catch (Exception e) {
@@ -76,11 +78,11 @@ public class TaskService {
 
     // Read taskCompleted
 
-    public List<TaskDTO> completedTasks(){
+    public List<TaskOutputDTO> completedTasks(){
         try{
             return taskRepository.getAll().stream()
                     .filter(t -> t.getDoneStatus() == DoneType.DONE)
-                    .map(this::mapToTaskDTO)
+                    .map(TaskOutputMapper::toDTO)
                     .toList();
 
         }catch (Exception e){
@@ -90,12 +92,12 @@ public class TaskService {
 
     //NotCompletedTask
 
-    public List<TaskDTO> notCompletedListTasks(){
+    public List<TaskOutputDTO> notCompletedListTasks(){
         try{
 
             return taskRepository.getAll().stream()
                     .filter(t->t.getDoneStatus() == DoneType.NOTDONE)
-                    .map(this::mapToTaskDTO)
+                    .map(TaskOutputMapper::toDTO)
                     .toList();
 
         }catch(Exception e){
@@ -105,18 +107,18 @@ public class TaskService {
 
     //completedTask
 
-    public TaskDTO markTaskCompleted(TaskIdDTO idDto)  {
+    public TaskOutputDTO markTaskCompleted(TaskIdDTO id)  {
         try {
 
-            validateTaskId(idDto.getId());
+            validateTaskId(id);
 
-            Task task = taskRepository.getById(idDto.getID());
+            Task task = taskRepository.getById(id.id());
             task.setDoneStatus(DoneType.DONE);
 
             taskRepository.update(task);
             System.out.println("Task completed");
 
-            return mapToTaskDTO(task);
+            return TaskOutputMapper.toDTO(task);
 
         }catch (Exception e){
             throw new DataAccessException("Error marking completed task, (id="+id+")",e);
@@ -126,40 +128,40 @@ public class TaskService {
 
     //Update
 
-    public TaskDTO updateTask(TaskUpdateDTO dto) { //taskUpdateDTO
+    public TaskOutputDTO updateTask(TaskUpdateDTO dto) { //taskUpdateDTO
         try {
 
             validateTaskUpdate(dto);
 
-            Task task = taskRepository.getById(dto.getId());
+            Task task = taskRepository.getById(dto.id());
             if(task == null){
-                throw new IllegalArgumentException("Task with id: "+dto.getId()+" does not exist.");
+                throw new IllegalArgumentException("Task with id: "+dto.id()+" does not exist.");
             }
 
-            applyUpdates(task, dto);
+            TaskInputMapper.applyUpdates(task, dto);
             taskRepository.update(task);
 
-            System.out.println("Task updated successfully, id: "+dto.getId());
+            System.out.println("Task updated successfully, id: "+dto.id());
 
-            return mapToTaskDTO(task);
+            return TaskOutputMapper.toDTO(task);
 
         }catch (Exception e){
-            throw new DataAccessException("Error updating task with id: "+ dto.getId()+" ",e);
+            throw new DataAccessException("Error updating task with id: "+ dto.id()+" ",e);
         }
     }
 
     //Delete task
 
-    public void deleteTask(TaskIdDTO idDto){
+    public void deleteTask(TaskIdDTO id){
 
         try{
 
-            validateTaskId(idDto);
-            taskRepository.remove(idDto.getId());
+            validateTaskId(id);
+            taskRepository.remove(id.id());
             System.out.println("Task successfully deleted");// eliminar?
 
         }catch(Exception e){
-            throw new DataAccessException("Error deleting task with id: "+idDto.getId() ,e);
+            throw new DataAccessException("Error deleting task with id: "+id.id() ,e);
         }
     }
 
@@ -175,37 +177,40 @@ public class TaskService {
                 throw new IllegalArgumentException("Task cannot be null");
             }
 
-           if (dto.getContent() == null || dto.getContent.isBlank()) {
+           if (dto.content() == null || dto.content().isBlank()) {
                throw new IllegalArgumentException("Content cannot be empty");
            }
 
-           if (dto.getTitle() = null || dto.getTitle.isBlank()) {
+           if (dto.title() == null || dto.title().isBlank()) {
                throw new IllegalArgumentException("Title cannot be empty");
            }
 
-           if (dto.getExpirateDate == null || dto.getExpirationDate.isBlank()) {
+           if (dto.expirationDate() == null || dto.expirationDate().isBlank()) {
                throw new IllegalArgumentException("Expiration date cannot be empty");
            }
 
-           if(dto.getExpirationDate()== null){
-               throw new IllegalArgumentException("Expiration date is required");
+           try{
+               LocalDate.parse(dto.expirationDate());
+           }catch (Exception e){
+               throw new IllegalArgumentException("Expiration date format must be yyyy-MM-dd",e);
            }
 
     }
 
-    private void validateTaskId(TaskIdDTO idDto){
-        if(idDto == null){
+    private void validateTaskId(TaskIdDTO id){
+        if(id == null){
             throw new IllegalArgumentException("Task id cannot be null");
         }
-        if(idDto.getId() <= 0){
-            throw new IllegalArgumentException("Invalid id: " +idDto.getId());
+        if(id.id() <= 0){
+            throw new IllegalArgumentException("Invalid id: " +id.id());
         }
 
-        Task task = taskRepository.getById(idDto.getId());
+        Task task = taskRepository.getById(id.id());
 
         if(task == null){
-            throw new IllegalArgumentException("Task not found with id: "+idDto.getId());
+            throw new IllegalArgumentException("Task not found with id: "+id.id());
         }
+
 
     }
 
@@ -215,109 +220,26 @@ public class TaskService {
             throw new IllegalArgumentException("DTO update cannot be null");
         }
 
-        if(dto.getId() <= 0){
+        if(dto.id() <= 0){
             throw new IllegalArgumentException("Invalid id.");
         }
-        if ((dto.getTitle() == null || dto.getTitle().isBlank()) &&
-            (dto.getContent() == null || dto.getContent().isBlank()) &&
-            dto.getExpirationDate == null &&
-            dto.getPriority == null &&
-            dto.getDoneStatus == null){
+        if ((dto.title() == null || dto.title().isBlank()) &&
+            (dto.content() == null || dto.content().isBlank()) &&
+            dto.expirationDate() == null &&
+            dto.priority() == null){
+
 
            throw new IllegalArgumentException("Not fields provided to update");
 
         }
 
-    }
-
-
-    //******************************************************************
-
-    //Mapper DTO -> Entity
-
-    private Task mapToTask(TaskDTO dto){
-      Task task = new Task();
-
-      task.setTitle(dto.getTitle);
-      task.setContent(dto.getContent);
-      task.setCreationDate(LocalDateTime.now());
-
-      LocalDate expireLocalDate = LocalDate.parse(dto.getExpireDate);
-      task.setExpirationDate(expireLocalDate);
-
-      PriorityType priority = dto.getPriority();
-      if(priority == null){
-          priority = PriorityType.MEDIUM;
-
-      }
-      task.setPriority(priority);
-
-      task.setDoneStatus(DoneType.NOTDONE);
-
-
-      return task;
-    }
-
-    private Task mapToTask(TaskDTO dto){
-        Task task = new Task();
-
-        task.setTitle(dto.getTitle());
-        task.setContent(dto.getContent());
-        task.setCreationDate(LocalDateTime.now());
-        task.setExpirationDate(dto.getExpirationDate());
-
-        PriorityType priority = dto.getPriority();
-        if(priority == null){
-            priority = PriorityType.MEDIUM;
-
+        if(dto.expirationDate()!= null && !dto.expirationDate().isBlank()){
+            try{
+                LocalDate.parse(dto.expirationDate());
+            }catch (Exception e){
+                throw new IllegalArgumentException("Expiration date format must be yyyy-MM-dd");
+            }
         }
-        task.setPriority(priority);
-
-        task.setDoneStatus(DoneType.NOTDONE);
-
-        return task;
-    }
-
-
-    private TaskDTO mapToTaskDTO(Task task){
-
-        TaskDTO dto = new TaskDTO();
-        dto.setId(task.getId());
-        dto.setTitle(task.getTitle());
-        dto.setContent(task.getContent());
-        dto.setCreationDate(task.getCreationDate());
-        dto.setExpirationDate(task.getExpirationDate());
-        dto.Priority(task.getPriority());
-        dto.setDoneStatus(task.getDoneStatus());
-
-        return dto;
-    }
-
-
-    private void applyUpdates(Task task, TaskUpdateDTO dto) {
-
-        if (dto.getTitle() != null && !dto.getTitle().isBlank()) {
-            task.setTitle(dto.getTitle());
-        }
-
-        if (dto.getContent() != null && !dto.getContent.isBlank()) {
-            task.setContent(dto.getContent);
-        }
-
-        if (dto.getExpirationDate != null) {
-            task.setExpirationDate(dto.getExpirationDate());
-        }
-
-        if (dto.getPriority != null) {
-            task.setPriority(dto.getPriority());
-        }
-
-        if (dto.getDoneStatus != null) {
-            task.setDoneStatus(dto.getDoneStatus());
-
-
-        }
-
 
     }
 

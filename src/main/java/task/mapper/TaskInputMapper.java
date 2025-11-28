@@ -1,8 +1,10 @@
 package task.mapper;
 
+import task.dto.TaskUpdateDTO;
 import task.enums.DoneType;
 import task.enums.PriorityType;
 import task.model.Task;
+import task.dto.TaskDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,8 +21,8 @@ public class TaskInputMapper {
         task.setExpirationDate(LocalDate.parse(dto.expirationDate()));
 
         PriorityType priority = PriorityType.MEDIUM;
-        if(dto.priority() != null && !dto.priority.isBlank()){
-            priority = PriorityType.valueOf(dto.priority().toUpperCase())
+        if(dto.priority() != null && !dto.priority().isBlank()){
+            priority = PriorityType.valueOf(dto.priority().toUpperCase());
         }
 
         task.setPriority(priority);
@@ -35,24 +37,21 @@ public class TaskInputMapper {
     public static void applyUpdates(Task task, TaskUpdateDTO dto){
 
         if (dto.title() != null && !dto.title().isBlank()) {
-            task.setTitle(dto.getitle());
+            task.setTitle(dto.title());
         }
 
-        if (dto.content() != null && !dto.content.isBlank()) {
-            task.setContent(dto.content);
+        if (dto.content() != null && !dto.content().isBlank()) {
+            task.setContent(dto.content());
         }
 
-        if (dto.expirationDate != null) {
-            task.setExpirationDate(dto.expirationDate());
+        if (dto.expirationDate() != null && !dto.expirationDate().isBlank()) {
+            task.setExpirationDate(LocalDate.parse(dto.expirationDate()));
         }
 
-        if (dto.priority != null) {
-            task.setPriority(dto.priority());
+        if (dto.priority() != null && !dto.priority().isBlank()) {
+            task.setPriority(PriorityType.valueOf(dto.priority().toUpperCase()));
         }
-        /*
-        if (dto.doneStatus != null) {
-            task.setDoneStatus(dto.doneStatus());
 
-        }*/
+
     }
 }
