@@ -1,28 +1,40 @@
 package application;
+import common.dao.GenericDAO;
 import menu.MainMenu;
 import task.model.Task;
 import task.repository.TaskRepository;
 import task.service.TaskService;
-import common.dao.GenericDAO;
 import java.util.Scanner;
-
-
 
 public class MainApp {
 
-    static Scanner scanner = new Scanner(System.in);
-    static TaskRepository taskRepository = new TaskRepository(GenericDAO < Task > taskDao);
-    static TaskService taskService = new TaskService(taskRepository);
-    static MainMenu mainMenu = new MainMenu(scanner, taskService);
+    private Scanner scanner;
+    private TaskRepository taskRepository;
+    private TaskService taskService;
+    private MainMenu mainMenu;
 
+    //inicializar dependencias
+    private void init() {
+        scanner = new Scanner(System.in);
 
+/*
+        GenericDAO<Task> taskDao = new GenericDAO<>();
+        taskRepository = new TaskRepository(taskDao);
+        taskService = new TaskService(taskRepository);
+        mainMenu = new MainMenu(scanner, taskService);
+  */
 
-    /*private static runProgram(){
-    }*/
+    }
+
+    public void run() {
+        mainMenu.start();
+    }
 
     public static void main(String[] args) {
-        MainMenu menu = new MainMenu(scanner,taskService);
-        menu.start();
+        MainApp app = new MainApp();
+        app.init();
+        app.run();
     }
 }
+
 
