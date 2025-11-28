@@ -1,5 +1,7 @@
 package menu;
 
+import common.utils.PrintMenus;
+import menu.TaskMenu;
 import task.service.TaskService;
 
 import java.util.Scanner;
@@ -19,7 +21,7 @@ public class MainMenu {
 
         while (option != 0) {
 
-            printMainMenu();
+            PrintMenus.printMainMenu();
 
             while (!scanner.hasNextInt()) {
                 System.out.print("Por favor, introduce un número válido: ");
@@ -55,13 +57,5 @@ public class MainMenu {
         }
     }
 
-    private void printMainMenu() {
-        System.out.println("\n===== AGENDA =====");
-        System.out.println("1. Gestionar tareas");
-        System.out.println("2. Gestionar notas");
-        System.out.println("3. Gestionar eventos");
-        System.out.println("0. Salir");
-        System.out.print("Elige una opción: ");
-    }
 }
 

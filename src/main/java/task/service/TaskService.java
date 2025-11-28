@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class TaskService {
+ public class TaskService {
 
     private final TaskRepository taskRepository;
 
