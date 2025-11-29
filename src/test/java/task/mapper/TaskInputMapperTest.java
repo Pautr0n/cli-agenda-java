@@ -31,7 +31,7 @@ class TaskInputMapperTest {
     }
 
     @Test
-    void testToEntity_whenUsesDefaultPriority_thenNull(){
+    void testToEntity_whenUsesDefaultPriority_thenDefaultsMedium(){
         TaskDTO dto = new TaskDTO(
                 "Comprar pan",
                 "Ir a la panaderia",
