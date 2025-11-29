@@ -8,6 +8,7 @@ import task.service.TaskService;
 
 import java.util.Scanner;
 
+
 public class TaskMenu {
 
     private final Scanner scanner;
@@ -64,7 +65,7 @@ public class TaskMenu {
 
         TaskDTO dto = new TaskDTO(title, content, expirationDate, priorityText);
 
-        taskService.createTask(dto);
+                taskService.createTask(dto);
 
     }
 
