@@ -8,7 +8,6 @@ import task.service.TaskService;
 
 import java.util.Scanner;
 
-
 public class TaskMenu {
 
     private final Scanner scanner;
@@ -65,7 +64,7 @@ public class TaskMenu {
 
         TaskDTO dto = new TaskDTO(title, content, expirationDate, priorityText);
 
-                taskService.createTask(dto);
+        taskService.createTask(dto);
 
     }
 
@@ -110,7 +109,7 @@ public class TaskMenu {
     //añadido no existia (revisar si cuadra con la nueva ServiceTask de Andres.
     private void completedTask() {
         try {
-            taskService.completedTask();
+            taskService.getCompletedTasks();
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
