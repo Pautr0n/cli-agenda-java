@@ -109,7 +109,7 @@ public class TaskMenu {
     //añadido no existia (revisar si cuadra con la nueva ServiceTask de Andres.
     private void completedTask() {
         try {
-            taskService.completedTask();
+            taskService.completedTasks();
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
