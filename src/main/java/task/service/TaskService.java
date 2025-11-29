@@ -116,6 +116,8 @@ public class TaskService {
                 throw new IllegalArgumentException("Task with id: "+id.id()+" not found.");
             }
 
+    public List<TaskOutputDTO> notCompletedListTasks(){
+        try{
 
             task.setDoneStatus(DoneType.DONE);
             taskRepository.update(task);
@@ -211,6 +213,37 @@ public class TaskService {
         if(id == null){
             throw new IllegalArgumentException("Task id cannot be null");
         }
+    }
+
+
+
+    //******************************************************************
+
+    //Validations
+
+    private void validateTaskDTOCreate(TaskDTO dto){
+
+         if(dto == null){
+                throw new IllegalArgumentException("Task cannot be null");
+            }
+
+           if (dto.content() == null || dto.content().isBlank()) {
+               throw new IllegalArgumentException("Content cannot be empty");
+           }
+
+           if (dto.title() == null || dto.title().isBlank()) {
+               throw new IllegalArgumentException("Title cannot be empty");
+           }
+
+           if (dto.expirationDate() == null || dto.expirationDate().isBlank()) {
+               throw new IllegalArgumentException("Expiration date cannot be empty");
+           }
+
+           try{
+               LocalDate.parse(dto.expirationDate());
+           }catch (Exception e){
+               throw new IllegalArgumentException("Expiration date format must be yyyy-MM-dd",e);
+           }
 
         if(id.id() == null){
             throw new IllegalArgumentException("Task id value cannot be null");
