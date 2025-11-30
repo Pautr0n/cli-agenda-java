@@ -33,7 +33,7 @@ public class TaskService {
         try {
             validateTaskDTOCreate(dto);
 
-            Task task = TaskInputMapper.toEntity(dto);
+            Task task = TaskDTOMapper.dtoToTask(dto);  //PAU: modificado el Mapper:
             taskRepository.add(task);
             //Aqui modificar la clase Repository y la clase DAO para que devuelvan Task y así poder imprimir la Task con ID
             //task = taskRepository.add(task);
@@ -55,7 +55,7 @@ public class TaskService {
                 throw new IllegalArgumentException("Task with id " + id.id() + " not found");
             }
 
-            return TaskOutputMapper.toDTO(task);
+            return TaskDTOMapper.taskToDTO(task);//PAU: modificado el Mapper:
 
         } catch (Exception e) {
             throw new DataAccessException("Error retrieving task with id: " + id.id(), e);
@@ -68,7 +68,7 @@ public class TaskService {
         try {
 
             return taskRepository.getAll().stream()
-                    .map(TaskOutputMapper::toDTO)
+                    .map(TaskDTOMapper::taskToDTO)  //PAU: modificado el Mapper:
                     .toList();
 
         } catch (Exception e) {
@@ -82,7 +82,7 @@ public class TaskService {
         try {
             return taskRepository.getAll().stream()
                     .filter(t -> t.getDoneStatus() == DoneType.DONE)
-                    .map(TaskOutputMapper::toDTO)
+                    .map(TaskDTOMapper::taskToDTO)  //PAU: modificado el Mapper:
                     .toList();
 
         } catch (Exception e) {
@@ -97,7 +97,7 @@ public class TaskService {
 
             return taskRepository.getAll().stream()
                     .filter(t -> t.getDoneStatus() == DoneType.NOTDONE)
-                    .map(TaskOutputMapper::toDTO)
+                    .map(TaskDTOMapper::taskToDTO)  //PAU: modificado el Mapper:
                     .toList();
 
         } catch (Exception e) {
@@ -110,7 +110,9 @@ public class TaskService {
         try{
             return taskRepository.getAll().stream()
                     .filter(t -> t.getDoneStatus() == dto.priority().toUpperCase())
-                    .map(TaskOutputMapper::toDTO).toList();
+                    .map(TaskDTOMapper::taskToDTO).toList();    //PAU: modificado el Mapper:
+        } catch (Exception e) {
+            throw new DataAccessException("Error retrieving filtered tasks", e);
         }
     }
 
@@ -128,7 +130,7 @@ public class TaskService {
             task.setDoneStatus(DoneType.DONE);
             taskRepository.update(task);
 
-            return TaskOutputMapper.toDTO(task);
+            return TaskDTOMapper.taskToDTO(task);//PAU: modificado el Mapper:
 
         } catch (Exception e) {
             throw new DataAccessException("Error marking completed task, id=" + id.id(), e);
@@ -150,7 +152,7 @@ public class TaskService {
 //                throw new IllegalArgumentException("Task with id: " + dto.id() + " does not exist.");
 //            }
 
-            Task task = TaskInputMapper.toEntity(dto);
+            Task task = TaskDTOMapper.dtoToTask(dto);//PAU: modificado el Mapper:
 
             if (dto.title() != null && !dto.title().isBlank()) {
                 task.setTitle(dto.title());
@@ -173,7 +175,7 @@ public class TaskService {
 
             //System.out.println("Task updated successfully, id: "+dto.id());
 
-            return TaskOutputMapper.toDTO(task); //aquí estás devolviendo el mismo argumento que en la llamada al métood.
+            return TaskDTOMapper.taskToDTO(task); //aquí estás devolviendo el mismo argumento que en la llamada al métood.
 
         } catch (Exception e) {
             throw new DataAccessException("Error updating task with id: " + dto.id() + " ", e);
