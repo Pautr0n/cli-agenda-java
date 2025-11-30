@@ -103,6 +103,15 @@ public class TaskService {
         }
     }
 
+    //PAU - Unificando listar Tasks segun estado:
+    public List<TaskOutputDTO> getTasksByStatus(TaskStatusDTO dto){
+        try{
+            return taskRepository.getAll().stream()
+                    .filter(t -> t.getDoneStatus() == dto.priority().toUpperCase())
+                    .map(TaskOutputMapper::toDTO).toList();
+        }
+    }
+
     //completedTask
 
     public TaskOutputDTO markTaskCompleted(TaskIdDTO id) {
