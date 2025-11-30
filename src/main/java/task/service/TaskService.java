@@ -35,6 +35,8 @@ public class TaskService {
 
             Task task = TaskInputMapper.toEntity(dto);
             taskRepository.add(task);
+            //Aqui modificar la clase Repository y la clase DAO para que devuelvan Task y así poder imprimir la Task con ID
+            //task = taskRepository.add(task);
 
             return TaskOutputMapper.toDTO(task);
 
