@@ -3,6 +3,7 @@ package task.service;
 import common.exception.DataAccessException;
 import task.dto.*;
 import task.enums.DoneType;
+import task.enums.PriorityType;
 import task.mapper.TaskInputMapper;
 import task.mapper.TaskOutputMapper;
 import task.model.Task;
@@ -131,19 +132,37 @@ public class TaskService {
         try {
 
             validateTaskUpdate(dto);
+            //PAU: El MySQLTaskDAOAdapter ya verifica si se ha updateado o no una Task
+//            Task task = taskRepository.getById(dto.id());
+//
+//            if (task == null) {
+//                throw new IllegalArgumentException("Task with id: " + dto.id() + " does not exist.");
+//            }
 
-            Task task = taskRepository.getById(dto.id());
+            Task task = TaskInputMapper.toEntity(dto);
 
-            if (task == null) {
-                throw new IllegalArgumentException("Task with id: " + dto.id() + " does not exist.");
+            if (dto.title() != null && !dto.title().isBlank()) {
+                task.setTitle(dto.title());
             }
 
-            TaskInputMapper.applyUpdates(task, dto);
+            if (dto.content() != null && !dto.content().isBlank()) {
+                task.setContent(dto.content());
+            }
+
+            if (dto.expirationDate() != null && !dto.expirationDate().isBlank()) {
+                task.setExpirationDate(LocalDate.parse(dto.expirationDate()));
+            }
+
+            if (dto.priority() != null && !dto.priority().isBlank()) {
+                task.setPriority(PriorityType.valueOf(dto.priority().toUpperCase()));
+            }
+
+            //TaskInputMapper.applyUpdates(task, dto);
             taskRepository.update(task);
 
             //System.out.println("Task updated successfully, id: "+dto.id());
 
-            return TaskOutputMapper.toDTO(task);
+            return TaskOutputMapper.toDTO(task); //aquí estás devolviendo el mismo argumento que en la llamada al métood.
 
         } catch (Exception e) {
             throw new DataAccessException("Error updating task with id: " + dto.id() + " ", e);
