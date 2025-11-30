@@ -158,16 +158,18 @@ public class TaskService {
 
             validateTaskId(id);
 
-            Task task = taskRepository.getById(id.id());
-            if (task == null) {
-                throw new IllegalArgumentException("Task not found with id: " + id.id());
-            }
+            //PAU: El MySQLTaskDAOAdapter ya verifica si se ha borrado o no una Task
+//            Task task = taskRepository.getById(id.id());
+//            if (task == null) {
+//                throw new IllegalArgumentException("Task not found with id: " + id.id());
+//            }
 
             taskRepository.remove(id.id());
             //System.out.println("Task successfully deleted");// eliminar?
 
-        } catch (Exception e) {
-            throw new DataAccessException("Error deleting task with id: " + id.id(), e);
+        //PAU En el MySQLTaskDAOAdapter se lanza una DataAccessExceptio tanto si no existe la ID como si falla la conexión, con mensajes "e" diferentes.
+        } catch (DataAccessException e) {
+            throw new DataAccessException("Exception while deleting task with id: " + id.id(), e);
         }
     }
 
