@@ -22,7 +22,7 @@ public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
 
 
     @Override
-    public void insert(Task entity) {
+    public Task insert(Task entity) {
 
         try {
             String sql = "INSERT INTO task (title, content, creation_date, expiration_date, priority, done_status) " +
@@ -45,6 +45,7 @@ public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
                     entity.setId(keys.getInt(1));
                 }
             }
+            return entity;
         } catch (SQLException e) {
             throw new DataAccessException("Error inserting task", e);
         }
