@@ -179,7 +179,7 @@ public class TaskService {
     private void validateTaskDTOCreate(TaskDTO dto) {
 
         if (dto == null) {
-            throw new IllegalArgumentException("Task cannot be null");
+            throw new IllegalArgumentException("DTO record instance cannot be null"); //PAU - Improving message information, previous: "Task cannot be null"
         }
 
         if (dto.content() == null || dto.content().isBlank()) {
@@ -204,7 +204,7 @@ public class TaskService {
 
     private void validateTaskId(TaskIdDTO id) {
         if (id == null) {
-            throw new IllegalArgumentException("Task id cannot be null");
+            throw new IllegalArgumentException("DTO record instance cannot be null");//PAU - Improving message information, previous: "Task id cannot be null"
         }
         if (id.id() == null) {
             throw new IllegalArgumentException("Task id value cannot be null");
@@ -214,19 +214,21 @@ public class TaskService {
         }
     }
 
+    //PAU: refactoring wrong parenthesis
     private void validateTaskUpdate(TaskUpdateDTO dto) {
 
         if (dto == null) {
-            throw new IllegalArgumentException("DTO update cannot be null");
+            throw new IllegalArgumentException("DTO record instance cannot be null"); //PAU - Improving message information, previous: "DTO update cannot be null"
         }
 
         if (dto.id() <= 0) {
             throw new IllegalArgumentException("Invalid id.");
         }
+
         if ((dto.title() == null || dto.title().isBlank()) &&
                 (dto.content() == null || dto.content().isBlank()) &&
-                dto.expirationDate() == null || dto.expirationDate().isBlank() &&
-                dto.priority() == null || dto.priority().isBlank()) {
+                (dto.expirationDate() == null || dto.expirationDate().isBlank()) &&
+                (dto.priority() == null || dto.priority().isBlank())) {
 
 
             throw new IllegalArgumentException("No fields provided to update");
