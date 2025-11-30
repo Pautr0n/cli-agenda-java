@@ -105,7 +105,8 @@ public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
                 statement.setString(4, entity.getPriority().name());
                 statement.setString(5, entity.getDoneStatus().name());
                 statement.setInt(6, entity.getId());
-                statement.executeUpdate();
+                int rows = statement.executeUpdate();
+                if(rows==0) throw new DataAccessException("No task found with id " + entity.getId());
             }
         }catch (SQLException e) {
             throw new DataAccessException("Error updating tasks with id " + entity.getId(), e);
