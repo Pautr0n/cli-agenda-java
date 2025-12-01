@@ -21,7 +21,7 @@ class TaskInputMapperTest {
                 "HIGH"
         );
 
-        Task task = TaskInputMapper.toEntity(dto);
+        Task task = TaskDTOMapper.dtoToTask(dto);
 
         assertEquals("Comprar pan", task.getTitle());
         assertEquals("Ir a la panaderia", task.getContent());
@@ -39,7 +39,7 @@ class TaskInputMapperTest {
                 null
         );
 
-        Task task = TaskInputMapper.toEntity(dto);
+        Task task = TaskDTOMapper.dtoToTask(dto);
 
         assertEquals(PriorityType.MEDIUM, task.getPriority());
     }
