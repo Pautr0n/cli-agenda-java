@@ -1,19 +1,18 @@
 package task.mapper;
 
+import task.dto.TaskDTO;
 import task.dto.TaskOutputDTO;
 import task.dto.TaskUpdateDTO;
 import task.enums.DoneType;
 import task.enums.PriorityType;
 import task.model.Task;
-import task.dto.TaskDTO;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class TaskDTOMapper {
 
-    //TaskDTO to Entity
-    public static Task dtoToTask(TaskDTO dto){
+    public static Task dtoToTask(TaskDTO dto) {
         Task task = new Task();
 
         task.setTitle(dto.title());
@@ -22,7 +21,7 @@ public class TaskDTOMapper {
         task.setExpirationDate(LocalDate.parse(dto.expirationDate()));
 
         PriorityType priority = PriorityType.MEDIUM;
-        if(dto.priority() != null && !dto.priority().isBlank()){
+        if (dto.priority() != null && !dto.priority().isBlank()) {
             priority = PriorityType.valueOf(dto.priority().toUpperCase());
         }
 
@@ -33,16 +32,16 @@ public class TaskDTOMapper {
         return task;
     }
 
-    public static Task dtoToTask(TaskUpdateDTO dto){
+    public static Task dtoToTask(TaskUpdateDTO dto) {
         Task task = new Task();
-
+        task.setId(dto.id());
         task.setTitle(dto.title());
         task.setContent(dto.content());
         task.setCreationDate(LocalDateTime.now());
         task.setExpirationDate(LocalDate.parse(dto.expirationDate()));
 
         PriorityType priority = PriorityType.MEDIUM;
-        if(dto.priority() != null && !dto.priority().isBlank()){
+        if (dto.priority() != null && !dto.priority().isBlank()) {
             priority = PriorityType.valueOf(dto.priority().toUpperCase());
         }
 
@@ -53,7 +52,7 @@ public class TaskDTOMapper {
         return task;
     }
 
-    public static TaskOutputDTO taskToDTO(Task task){
+    public static TaskOutputDTO taskToDTO(Task task) {
 
         String priority = task.getPriority() != null
                 ? task.getPriority().name() : "MEDIUM";
@@ -70,28 +69,5 @@ public class TaskDTOMapper {
                 priority,
                 status
         );
-    }
-
-    // Update
-
-    public static void applyUpdates(Task task, TaskUpdateDTO dto){
-
-        if (dto.title() != null && !dto.title().isBlank()) {
-            task.setTitle(dto.title());
-        }
-
-        if (dto.content() != null && !dto.content().isBlank()) {
-            task.setContent(dto.content());
-        }
-
-        if (dto.expirationDate() != null && !dto.expirationDate().isBlank()) {
-            task.setExpirationDate(LocalDate.parse(dto.expirationDate()));
-        }
-
-        if (dto.priority() != null && !dto.priority().isBlank()) {
-            task.setPriority(PriorityType.valueOf(dto.priority().toUpperCase()));
-        }
-
-
     }
 }
