@@ -4,8 +4,7 @@ import common.exception.DataAccessException;
 import task.dto.*;
 import task.enums.DoneType;
 import task.enums.PriorityType;
-import task.mapper.TaskInputMapper;
-import task.mapper.TaskOutputMapper;
+import task.mapper.TaskDTOMapper;
 import task.model.Task;
 import task.repository.TaskRepository;
 
@@ -78,34 +77,33 @@ public class TaskService {
 
     // Read taskCompleted
 
-    public List<TaskOutputDTO> getCompletedTasks() {
-        try {
-            return taskRepository.getAll().stream()
-                    .filter(t -> t.getDoneStatus() == DoneType.DONE)
-                    .map(TaskDTOMapper::taskToDTO)  //PAU: modificado el Mapper:
-                    .toList();
-
-        } catch (Exception e) {
-            throw new DataAccessException("Error retrieving complete tasks.", e);
-        }
-    }
+//    public List<TaskOutputDTO> getCompletedTasks() {
+//        try {
+//            return taskRepository.getAll().stream()
+//                    .filter(t -> t.getDoneStatus() == DoneType.DONE)
+//                    .map(TaskDTOMapper::taskToDTO)  //PAU: modificado el Mapper:
+//                    .toList();
+//
+//        } catch (Exception e) {
+//            throw new DataAccessException("Error retrieving complete tasks.", e);
+//        }
+//    }
 
     //NotCompletedTask
 
-    public List<TaskOutputDTO> getPendingTasks() {
-        try {
+//    public List<TaskOutputDTO> getPendingTasks() {
+//        try {
+//
+//            return taskRepository.getAll().stream()
+//                    .filter(t -> t.getDoneStatus() == DoneType.NOTDONE)
+//                    .map(TaskDTOMapper::taskToDTO)
+//                    .toList();
+//
+//        } catch (Exception e) {
+//            throw new DataAccessException("Error retrieving uncompleted tasks", e);
+//        }
+//    }
 
-            return taskRepository.getAll().stream()
-                    .filter(t -> t.getDoneStatus() == DoneType.NOTDONE)
-                    .map(TaskDTOMapper::taskToDTO)  //PAU: modificado el Mapper:
-                    .toList();
-
-        } catch (Exception e) {
-            throw new DataAccessException("Error retrieving uncompleted tasks", e);
-        }
-    }
-
-    //PAU - Unificando listar Tasks segun estado:
     public List<TaskOutputDTO> getTasksByStatus(int option){
         DoneType doneType;
         switch(option){
@@ -117,7 +115,7 @@ public class TaskService {
         try{
             return taskRepository.getAll().stream()
                     .filter(t -> t.getDoneStatus() == doneType)
-                    .map(TaskDTOMapper::taskToDTO).toList();    //PAU: modificado el Mapper:
+                    .map(TaskDTOMapper::taskToDTO).toList();
         } catch (Exception e) {
             throw new DataAccessException("Error retrieving filtered tasks", e);
         }
@@ -137,7 +135,7 @@ public class TaskService {
             task.setDoneStatus(DoneType.DONE);
             taskRepository.update(task);
 
-            return TaskDTOMapper.taskToDTO(task);//PAU: modificado el Mapper:
+            return TaskDTOMapper.taskToDTO(task);
 
         } catch (Exception e) {
             throw new DataAccessException("Error marking completed task, id=" + id.id(), e);
@@ -148,18 +146,12 @@ public class TaskService {
 
     //Update
 
-    public TaskOutputDTO updateTask(TaskUpdateDTO dto) { //taskUpdateDTO
+    public TaskOutputDTO updateTask(TaskUpdateDTO dto) {
         try {
 
             validateTaskUpdate(dto);
-            //PAU: El MySQLTaskDAOAdapter ya verifica si se ha updateado o no una Task
-//            Task task = taskRepository.getById(dto.id());
-//
-//            if (task == null) {
-//                throw new IllegalArgumentException("Task with id: " + dto.id() + " does not exist.");
-//            }
 
-            Task task = TaskDTOMapper.dtoToTask(dto);//PAU: modificado el Mapper:
+            Task task = TaskDTOMapper.dtoToTask(dto);
 
             if (dto.title() != null && !dto.title().isBlank()) {
                 task.setTitle(dto.title());
@@ -177,12 +169,9 @@ public class TaskService {
                 task.setPriority(PriorityType.valueOf(dto.priority().toUpperCase()));
             }
 
-            //TaskInputMapper.applyUpdates(task, dto);
             taskRepository.update(task);
 
-            //System.out.println("Task updated successfully, id: "+dto.id());
-
-            return TaskDTOMapper.taskToDTO(task); //aquí estás devolviendo el mismo argumento que en la llamada al métood.
+            return TaskDTOMapper.taskToDTO(task);
 
         } catch (Exception e) {
             throw new DataAccessException("Error updating task with id: " + dto.id() + " ", e);
@@ -197,16 +186,9 @@ public class TaskService {
 
             validateTaskId(id);
 
-            //PAU: El MySQLTaskDAOAdapter ya verifica si se ha borrado o no una Task
-//            Task task = taskRepository.getById(id.id());
-//            if (task == null) {
-//                throw new IllegalArgumentException("Task not found with id: " + id.id());
-//            }
-
             taskRepository.remove(id.id());
-            //System.out.println("Task successfully deleted");// eliminar?
 
-        //PAU En el MySQLTaskDAOAdapter se lanza una DataAccessExceptio tanto si no existe la ID como si falla la conexión, con mensajes "e" diferentes.
+
         } catch (DataAccessException e) {
             throw new DataAccessException("Exception while deleting task with id: " + id.id(), e);
         }
@@ -220,7 +202,7 @@ public class TaskService {
     private void validateTaskDTOCreate(TaskDTO dto) {
 
         if (dto == null) {
-            throw new IllegalArgumentException("DTO record instance cannot be null"); //PAU - Improving message information, previous: "Task cannot be null"
+            throw new IllegalArgumentException("DTO record instance cannot be null");
         }
 
         if (dto.content() == null || dto.content().isBlank()) {
@@ -245,7 +227,7 @@ public class TaskService {
 
     private void validateTaskId(TaskIdDTO id) {
         if (id == null) {
-            throw new IllegalArgumentException("DTO record instance cannot be null");//PAU - Improving message information, previous: "Task id cannot be null"
+            throw new IllegalArgumentException("DTO record instance cannot be null");
         }
         if (id.id() == null) {
             throw new IllegalArgumentException("Task id value cannot be null");
@@ -255,11 +237,11 @@ public class TaskService {
         }
     }
 
-    //PAU: refactoring wrong parenthesis
+
     private void validateTaskUpdate(TaskUpdateDTO dto) {
 
         if (dto == null) {
-            throw new IllegalArgumentException("DTO record instance cannot be null"); //PAU - Improving message information, previous: "DTO update cannot be null"
+            throw new IllegalArgumentException("DTO record instance cannot be null");
         }
 
         if (dto.id() <= 0) {

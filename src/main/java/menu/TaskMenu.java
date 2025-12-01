@@ -94,11 +94,11 @@ public class TaskMenu {
                     printTaskList(listTasks);
                     break;
                 case 2:
-                    listTasks = taskService.getPendingTasks();
+                    listTasks = taskService.getTasksByStatus(option);
                     printTaskList(listTasks);
                     break;
                 case 3:
-                    listTasks = taskService.getCompletedTasks();
+                    listTasks = taskService.getTasksByStatus(option);
                     printTaskList(listTasks);
                     break;
                 default:
