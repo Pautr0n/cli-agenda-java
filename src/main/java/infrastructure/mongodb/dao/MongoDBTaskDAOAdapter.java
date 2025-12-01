@@ -35,7 +35,7 @@ public class MongoDBTaskDAOAdapter implements GenericDAO<Task> {
             task.setId(doc.getObjectId("_id").toHexString().hashCode()); // ejemplo simple de ID
             return task;
         } catch (MongoException e) {
-            throw new DataAccessException("Error inserting task in MongoDB", e);
+            throw new DataAccessException("DAO error [update]: Error inserting task in MongoDB", e);
         }
     }
 
@@ -45,7 +45,7 @@ public class MongoDBTaskDAOAdapter implements GenericDAO<Task> {
             Document doc = collection.find(eq("_id", id)).first();
             return doc != null ? mapTask(doc) : null;
         } catch (MongoException e) {
-            throw new DataAccessException("Error finding task in MongoDB", e);
+            throw new DataAccessException("DAO error [Query]: Error finding task in MongoDB", e);
         }
     }
 
@@ -58,7 +58,7 @@ public class MongoDBTaskDAOAdapter implements GenericDAO<Task> {
             }
             return tasks;
         } catch (MongoException e) {
-            throw new DataAccessException("Error retrieving tasks from MongoDB", e);
+            throw new DataAccessException("DAO error [Query]: Error retrieving tasks from MongoDB", e);
         }
     }
 
@@ -74,7 +74,7 @@ public class MongoDBTaskDAOAdapter implements GenericDAO<Task> {
 
             collection.updateOne(eq("_id", task.getId()), new Document("$set", updateDoc));
         } catch (MongoException e) {
-            throw new DataAccessException("Error updating task in MongoDB", e);
+            throw new DataAccessException("DAO error [update]: Error updating task in MongoDB", e);
         }
     }
 
