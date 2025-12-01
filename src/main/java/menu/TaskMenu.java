@@ -3,10 +3,14 @@ package menu;
 import common.utils.PrintMenus;
 import task.dto.TaskDTO;
 import task.dto.TaskIdDTO;
+import task.dto.TaskOutputDTO;
 import task.dto.TaskUpdateDTO;
 import task.service.TaskService;
 
+import java.util.List;
 import java.util.Scanner;
+
+import static common.utils.PrintMenus.*;
 
 public class TaskMenu {
 
@@ -23,13 +27,13 @@ public class TaskMenu {
 
         while (option != 0) {
 
-            PrintMenus.showTaskMenu();  // cambio a impresión en clase nueva
+            PrintMenus.showTaskMenu();
 
             while (!scanner.hasNextInt()) {
                 System.out.print("Por favor, introduce un número válido: ");
                 scanner.nextLine();
             }
-// añadir funcion que falta listar tarras completadas
+
             option = scanner.nextInt();
             scanner.nextLine();
 
@@ -38,9 +42,8 @@ public class TaskMenu {
                 case 2 -> listTasks();
                 case 3 -> getTaskById();
                 case 4 -> markTaskCompleted();
-                case 5 -> completedTask(); // añadido no existia revisar con Andres
-                case 6 -> updateTask(); // pendiente
-                case 7 -> deleteTask();
+                case 5 -> updateTask();
+                case 6 -> deleteTask();
                 case 0 -> System.out.println("Volviendo al menú principal...");
                 default -> System.out.println("Opción no válida.");
             }
@@ -64,10 +67,50 @@ public class TaskMenu {
 
         TaskDTO dto = new TaskDTO(title, content, expirationDate, priorityText);
 
-        taskService.createTask(dto);
+       TaskOutputDTO dtoOutput = taskService.createTask(dto);
+        printMenuCreateTask(dtoOutput);
+
 
     }
 
+
+    private void listTasks() {
+      printMenuListTask();
+
+        while (!scanner.hasNextInt()) {
+            System.out.print("Introduce un número válido: ");
+            scanner.nextLine();
+        }
+
+        int option = scanner.nextInt();
+        scanner.nextLine(); // limpiar buffer
+
+        try {
+            List<TaskOutputDTO> listTasks;
+
+            switch (option) {
+                case 1:
+                    listTasks = taskService.getAllTasks();
+                    printTaskList(listTasks);
+                    break;
+                case 2:
+                    listTasks = taskService.getPendingTasks();
+                    printTaskList(listTasks);
+                    break;
+                case 3:
+                    listTasks = taskService.getCompletedTasks();
+                    printTaskList(listTasks);
+                    break;
+                default:
+                    System.out.println("Opción no válida");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+
+
+    /*
     private void listTasks() {
         try {
             taskService.getAllTasks();
@@ -75,6 +118,29 @@ public class TaskMenu {
             System.out.println("Error: " + e.getMessage());
         }
     }
+
+
+    //LISTAR tareas completadas
+    //añadido no existia (revisar si cuadra con la nueva ServiceTask de Andres.
+    private void completedTask() {
+        try {
+            taskService.getCompletedTasks();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+    }
+
+    //LISTAR tareas no completadas
+
+    private void notCompletedTask(){
+        try {
+            taskService.getPendingTasks();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+*/
 
     private void getTaskById() {
         System.out.print("Introduce el ID de la tarea: ");
@@ -84,11 +150,14 @@ public class TaskMenu {
         TaskIdDTO dto = new TaskIdDTO(id);
 
         try {
-            taskService.getTaskById(dto);
+          TaskOutputDTO dtoOutput =  taskService.getTaskById(dto);
+          printMenuCreateTask(dtoOutput);
+
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
+
 
     private void markTaskCompleted() {
         System.out.print("ID de la tarea completada: ");
@@ -98,22 +167,12 @@ public class TaskMenu {
         TaskIdDTO dto = new TaskIdDTO(id);
 
         try {
-            taskService.markTaskCompleted(dto);
+            TaskOutputDTO dtoOutput = taskService.markTaskCompleted(dto);
+            printMarkTask(dtoOutput);
+
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
-    }
-
-
-    //LISTAR tareas competadas
-    //añadido no existia (revisar si cuadra con la nueva ServiceTask de Andres.
-    private void completedTask() {
-        try {
-            taskService.getCompletedTasks();
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
-        }
-
     }
 
 
@@ -134,14 +193,7 @@ public class TaskMenu {
 
         while (option != 0) {
 
-            System.out.println("""
-                    ¿Qué contenido deseas modificar?
-                    1- Título
-                    2- Contenido
-                    3- Fecha
-                    4- Prioridad
-                    0- Salir
-                    """);
+            printMenuUpdate();
 
             while (!scanner.hasNextInt()) {
                 System.out.print("Introduce un número válido: ");
@@ -176,7 +228,9 @@ public class TaskMenu {
         TaskUpdateDTO dto = new TaskUpdateDTO(id, title, content, expirationDate, priorityText);
 
         try {
-            taskService.updateTask(dto);
+           TaskOutputDTO dtoOutput = taskService.updateTask(dto);
+           printMenuCreateUpdateTask(dtoOutput);
+
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
@@ -191,7 +245,10 @@ public class TaskMenu {
         TaskIdDTO dto = new TaskIdDTO(id);
 
         try {
+            // task service no devuelve nada en este caso.
             taskService.deleteTask(dto);
+            printDeleteTask(id);
+
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
         }
