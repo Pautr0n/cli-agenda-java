@@ -62,5 +62,21 @@ class TaskRepositoryTest {
         assertNull(repo.getById(task.getId()));
     }
 
+    @Test
+    void testAddReturnsTaskWithId() {
+        Task task = new Task();
+        task.setTitle("Repo Task");
+
+        Task inserted = repo.add(task);
+
+        assertNotNull(inserted);
+        assertNotNull(inserted.getId(), "El id debería asignarse al insertar");
+        assertEquals("Repo Task", inserted.getTitle());
+
+        // Verificamos que se puede recuperar por id
+        Task found = repo.getById(inserted.getId());
+        assertEquals("Repo Task", found.getTitle());
+    }
+
 
 }

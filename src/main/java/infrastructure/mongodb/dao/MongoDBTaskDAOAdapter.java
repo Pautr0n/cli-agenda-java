@@ -21,7 +21,7 @@ public class MongoDBTaskDAOAdapter implements GenericDAO<Task> {
     }
 
     @Override
-    public void insert(Task task) {
+    public Task insert(Task task) {
         try {
             Document doc = new Document()
                     .append("title", task.getTitle())
@@ -33,6 +33,7 @@ public class MongoDBTaskDAOAdapter implements GenericDAO<Task> {
 
             collection.insertOne(doc);
             task.setId(doc.getObjectId("_id").toHexString().hashCode()); // ejemplo simple de ID
+            return task;
         } catch (MongoException e) {
             throw new DataAccessException("Error inserting task in MongoDB", e);
         }

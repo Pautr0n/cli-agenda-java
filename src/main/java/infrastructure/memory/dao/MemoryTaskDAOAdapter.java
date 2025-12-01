@@ -21,11 +21,12 @@ public class MemoryTaskDAOAdapter implements GenericDAO<Task> {
 
 
     @Override
-    public void insert(Task entity) {
+    public Task insert(Task entity) {
         int id = idGenerator.getAndIncrement();
         entity.setId(id);
         tasks.put(id, entity);
         saveToFile();
+        return entity;
     }
 
     @Override
