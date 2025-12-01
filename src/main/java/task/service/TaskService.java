@@ -106,10 +106,17 @@ public class TaskService {
     }
 
     //PAU - Unificando listar Tasks segun estado:
-    public List<TaskOutputDTO> getTasksByStatus(TaskStatusDTO dto){
+    public List<TaskOutputDTO> getTasksByStatus(int option){
+        DoneType doneType;
+        switch(option){
+            case 2 -> doneType = DoneType.NOTDONE;
+            case 3 -> doneType = DoneType.DONE;
+            default -> throw new DataAccessException("Option not valid");
+        }
+
         try{
             return taskRepository.getAll().stream()
-                    .filter(t -> t.getDoneStatus() == dto.priority().toUpperCase())
+                    .filter(t -> t.getDoneStatus() == doneType)
                     .map(TaskDTOMapper::taskToDTO).toList();    //PAU: modificado el Mapper:
         } catch (Exception e) {
             throw new DataAccessException("Error retrieving filtered tasks", e);
