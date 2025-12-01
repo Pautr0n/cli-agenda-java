@@ -12,9 +12,10 @@ public abstract class EntityRepository<T> {
         this.dao = dao;
     }
 
-    public void add(T entity) {
+    public T add(T entity) {
         try {
-            dao.insert(entity);
+            entity = dao.insert(entity);
+            return entity;
         } catch (Exception e) {
             throw new DataAccessException("Error inserting entity", e);
         }

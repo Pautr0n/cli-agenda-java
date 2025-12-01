@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface GenericDAO<T> {
-    void insert(T entity);
+    T insert(T entity);
 
     T findById(int id);
 

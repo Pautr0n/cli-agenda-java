@@ -49,17 +49,25 @@ class MySQLTaskDAOAdapterTest {
     void testInsertNewTask() {
         Task newTask = new Task();
         newTask.setTitle("Leer libro");
-        newTask.setContent("Leer Clean Code");
+        newTask.setContent("Leer Dirty Code");
         newTask.setExpirationDate(LocalDate.of(2025, 12, 10));
         newTask.setPriority(PriorityType.HIGH);
         newTask.setDoneStatus(DoneType.NOTDONE);
         newTask.setCreationDate(LocalDateTime.now());
 
-        dao.insert(newTask);
-        Task inserted = dao.findById(newTask.getId());
+        // Ahora insert devuelve la entidad con id asignado
+        Task inserted = dao.insert(newTask);
+
         assertNotNull(inserted);
+        assertNotNull(inserted.getId(), "El id debería asignarse al insertar");
         assertEquals("Leer libro", inserted.getTitle());
+
+        // Verificamos que realmente se guardó en la BD
+        Task found = dao.findById(inserted.getId());
+        assertNotNull(found);
+        assertEquals("Leer libro", found.getTitle());
     }
+
 
     @Test
     void testUpdateTask() {
