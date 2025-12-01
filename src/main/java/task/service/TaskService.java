@@ -1,7 +1,10 @@
 package task.service;
 
 import common.exception.DataAccessException;
-import task.dto.*;
+import task.dto.TaskDTO;
+import task.dto.TaskIdDTO;
+import task.dto.TaskOutputDTO;
+import task.dto.TaskUpdateDTO;
 import task.enums.DoneType;
 import task.enums.PriorityType;
 import task.mapper.TaskDTOMapper;
@@ -9,7 +12,6 @@ import task.model.Task;
 import task.repository.TaskRepository;
 
 import java.time.LocalDate;
-
 import java.util.List;
 
 public class TaskService {
@@ -25,8 +27,6 @@ public class TaskService {
     //CRUD
 
     // 1.Create
-
-
     public TaskOutputDTO createTask(TaskDTO dto) {
 
         try {
@@ -43,8 +43,8 @@ public class TaskService {
             throw new DataAccessException("Error creating a task", e);
         }
     }
-    //Read One
 
+    //Read One
     public TaskOutputDTO getTaskById(TaskIdDTO id) {
         try {
             validateTaskId(id);
@@ -62,7 +62,6 @@ public class TaskService {
     }
 
     //Read ALL
-
     public List<TaskOutputDTO> getAllTasks() {
         try {
 
@@ -75,44 +74,15 @@ public class TaskService {
         }
     }
 
-    // Read taskCompleted
-
-//    public List<TaskOutputDTO> getCompletedTasks() {
-//        try {
-//            return taskRepository.getAll().stream()
-//                    .filter(t -> t.getDoneStatus() == DoneType.DONE)
-//                    .map(TaskDTOMapper::taskToDTO)  //PAU: modificado el Mapper:
-//                    .toList();
-//
-//        } catch (Exception e) {
-//            throw new DataAccessException("Error retrieving complete tasks.", e);
-//        }
-//    }
-
-    //NotCompletedTask
-
-//    public List<TaskOutputDTO> getPendingTasks() {
-//        try {
-//
-//            return taskRepository.getAll().stream()
-//                    .filter(t -> t.getDoneStatus() == DoneType.NOTDONE)
-//                    .map(TaskDTOMapper::taskToDTO)
-//                    .toList();
-//
-//        } catch (Exception e) {
-//            throw new DataAccessException("Error retrieving uncompleted tasks", e);
-//        }
-//    }
-
-    public List<TaskOutputDTO> getTasksByStatus(int option){
+    public List<TaskOutputDTO> getTasksByStatus(int option) {
         DoneType doneType;
-        switch(option){
+        switch (option) {
             case 2 -> doneType = DoneType.NOTDONE;
             case 3 -> doneType = DoneType.DONE;
             default -> throw new DataAccessException("Option not valid");
         }
 
-        try{
+        try {
             return taskRepository.getAll().stream()
                     .filter(t -> t.getDoneStatus() == doneType)
                     .map(TaskDTOMapper::taskToDTO).toList();
@@ -122,7 +92,6 @@ public class TaskService {
     }
 
     //completedTask
-
     public TaskOutputDTO markTaskCompleted(TaskIdDTO id) {
         try {
 
@@ -145,13 +114,12 @@ public class TaskService {
 
 
     //Update
-
     public TaskOutputDTO updateTask(TaskUpdateDTO dto) {
         try {
 
             validateTaskUpdate(dto);
 
-            Task task = TaskDTOMapper.dtoToTask(dto);
+            Task task = taskRepository.getById(dto.id());
 
             if (dto.title() != null && !dto.title().isBlank()) {
                 task.setTitle(dto.title());
@@ -179,7 +147,6 @@ public class TaskService {
     }
 
     //Delete task
-
     public void deleteTask(TaskIdDTO id) {
 
         try {
@@ -198,7 +165,6 @@ public class TaskService {
     //******************************************************************
 
     //Validations
-
     private void validateTaskDTOCreate(TaskDTO dto) {
 
         if (dto == null) {
