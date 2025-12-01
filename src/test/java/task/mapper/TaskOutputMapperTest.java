@@ -25,7 +25,7 @@ class TaskOutputMapperTest {
         task.setPriority(PriorityType.HIGH);
         task.setDoneStatus(DoneType.DONE);
 
-        TaskOutputDTO dto = TaskOutputMapper.toDTO(task);
+        TaskOutputDTO dto = TaskDTOMapper.taskToDTO(task);
 
         assertEquals(10, dto.id());
         assertEquals("Estudiar patrones", dto.title());
