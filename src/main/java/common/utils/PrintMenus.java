@@ -103,7 +103,7 @@ public class PrintMenus {
                     2- Contenido
                     3- Fecha
                     4- Prioridad
-                    0- Salir
+                    0- Ejecutar cambio / Salir
                     """);
 
     }
