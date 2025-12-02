@@ -26,7 +26,7 @@ public class PrintMenus {
         System.out.println("3. Ver nota por ID");
         System.out.println("4. Actualizar nota");
         System.out.println("5. Eliminar nota");
-        System.out.println("6. Volver");
+        System.out.println("0. Volver");
         System.out.print("Elige una opción: \n");
     }
 
