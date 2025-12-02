@@ -3,16 +3,14 @@ package common.exception;
 public class MenuExceptionHandler {
 
     public static void handle(Exception e) {
-        if (e instanceof EntityNotFoundException) {
-            System.out.println("Task not found: " + e.getMessage());
-        } else if (e instanceof ValidationException) {
-            System.out.println("Validation Error: " + e.getMessage());
-        } else if (e instanceof DataAccessException) {
-            System.out.println("Technical error from the database: " + e.getMessage());
-        } else if (e instanceof ServiceException) {
-            System.out.println("Unexpected Error: " + e.getMessage());
-        } else {
-            System.out.println("Unknown error: " + e.getMessage());
+        switch (e) {
+            case EntityNotFoundException entityNotFoundException ->
+                    System.out.println("Task not found: " + e.getMessage());
+            case ValidationException validationException -> System.out.println("Validation Error: " + e.getMessage());
+            case DataAccessException dataAccessException ->
+                    System.out.println("Technical error from the database: " + e.getMessage());
+            case ServiceException serviceException -> System.out.println("Unexpected Error: " + e.getMessage());
+            default -> System.out.println("Unknown error: " + e.getMessage());
         }
     }
 
