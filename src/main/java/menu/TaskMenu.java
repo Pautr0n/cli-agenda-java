@@ -9,7 +9,6 @@ import task.dto.TaskUpdateDTO;
 import task.service.TaskService;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
@@ -177,8 +176,13 @@ public class TaskMenu {
 
     private void updateTask() {
         System.out.print("ID of the TASK to be updated: ");
+        while(!scanner.hasNextInt()){
+            System.out.print("Invalid ID, try again: ");
+            scanner.nextLine();
+        }
         int id = scanner.nextInt();
         scanner.nextLine();
+
 
         String title = null;
         String content = null;
@@ -189,7 +193,7 @@ public class TaskMenu {
 
         while (option != 0) {
 
-            printMenuUpdate();
+            printMenuUpdateTask();
 
             while (!scanner.hasNextInt()) {
                 System.out.print("Introduce un número válido: ");
@@ -236,7 +240,7 @@ public class TaskMenu {
 
         try {
             TaskOutputDTO dtoOutput = taskService.updateTask(dto);
-            printMenuCreateUpdateTask(dtoOutput);
+            printMenuTaskUpdated(dtoOutput);
         }  catch (Exception e) {
             MenuExceptionHandler.handle(e);
         }
