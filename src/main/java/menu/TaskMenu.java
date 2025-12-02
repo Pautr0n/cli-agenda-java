@@ -262,9 +262,9 @@ public class TaskMenu {
         try {
             TaskOutputDTO dtoOutput = taskService.getTaskById(dto);
             printMenuCreateTask(dtoOutput);
-            System.out.println("Estas seguro que quieres eliminar la tarea, (S/N)");
 
             while(true){
+                System.out.println("Estas seguro que quieres eliminar la tarea, (S/N)");
                 String confirmation = scanner.nextLine().toUpperCase();
                 switch (confirmation){
                     case "S"->{
@@ -272,11 +272,11 @@ public class TaskMenu {
                         printDeleteTask(id);
                     }
                     case "N"-> {
+                        System.out.println("Aborting delete task");
                         return;
                     }
                     default -> System.out.println("Invalid Option.");
                 }
-                return;
             }
 
 
