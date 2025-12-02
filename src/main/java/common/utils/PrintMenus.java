@@ -65,7 +65,8 @@ public class PrintMenus {
         System.out.println("\n--- LISTAR TAREAS ---");
         System.out.println("1. Todas");
         System.out.println("2. Pendientes");
-        System.out.println("3. Completadas\n");
+        System.out.println("3. Completadas");
+        System.out.println("0. Volver\n");
         System.out.print("Selecciona una opción: ");
 
     }
