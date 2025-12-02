@@ -16,7 +16,7 @@ public class PrintMenus {
         System.out.println("5. Actualizar tarea");
         System.out.println("6. Eliminar tarea");
         System.out.println("0. Volver");
-        System.out.print("Elige una opción: ");
+        System.out.print("Elige una opción: \n");
     }
 
 
@@ -45,12 +45,15 @@ public class PrintMenus {
     //MENU CREATE TASK
 
     public static void printMenuCreateTask(TaskOutputDTO dto) {
-        System.out.println(dto.id());
-        System.out.println(dto.title());
-        System.out.println(dto.content());
-        System.out.println(dto.expirationDate());
-        System.out.println(dto.priority());
-        System.out.println(dto.doneStatus());
+
+        System.out.println(" __________________________________________________");
+        System.out.println("| ID: " + dto.id());
+        System.out.println("| Título: " + dto.title());
+        System.out.println("| Contenido: " + dto.content());
+        System.out.println("| Fecha: " + dto.expirationDate());
+        System.out.println("| Prioridad: " + dto.priority());
+        System.out.println("| Estado: " + dto.doneStatus());
+        System.out.println("|___________________________________________________");
 
     }
 
@@ -59,10 +62,10 @@ public class PrintMenus {
     //MENU INTERNO LIST TASK
     public static void printMenuListTask (){
 
-        System.out.println("--- LISTAR TAREAS ---");
+        System.out.println("\n--- LISTAR TAREAS ---");
         System.out.println("1. Todas");
         System.out.println("2. Pendientes");
-        System.out.println("3. Completadas");
+        System.out.println("3. Completadas\n");
         System.out.print("Selecciona una opción: ");
 
     }
@@ -74,22 +77,24 @@ public class PrintMenus {
             System.out.println("No hay tareas para mostrar.");
             return;
         }
-
+        System.out.println("\n***LISTADO DE TAREAS***");
         for (TaskOutputDTO dto : tasks) {
+            System.out.println("---------------------------------->");
             System.out.println("ID: " + dto.id());
             System.out.println("Título: " + dto.title());
-            System.out.println("------------------------");
+
         }
     }
 
 
-
-
     //MENSAJE TASCA MARCADA COMO COMPLETADA
     public static void printMarkTask(TaskOutputDTO dto){
-        System.out.println("Tarea con ID: "+dto.id()+"\n"+
-                dto.title()+"\n"+
-                "Marcada como completada!");
+        System.out.println(" _______________________________");
+        System.out.println("| Tarea con ID: " + dto.id());
+        System.out.println("| " + dto.title());
+        System.out.println("| Marcada como completada!");
+        System.out.println("|_______________________________");
+
     }
 
 
@@ -97,17 +102,14 @@ public class PrintMenus {
 
     public static void printMenuUpdate (){
 
-        System.out.println("""
-                    ¿Qué contenido deseas modificar?
-                    1- Título
-                    2- Contenido
-                    3- Fecha
-                    4- Prioridad
-                    0- Ejecutar cambio / Salir
-                    """);
+        System.out.println("\n| ¿Qué contenido deseas modificar?");
+        System.out.println("| 1- Título");
+        System.out.println("| 2- Contenido");
+        System.out.println("| 3- Fecha");
+        System.out.println("| 4- Prioridad");
+        System.out.println("| 0- Salir");
 
     }
-
 
 
     // IMPRESION UPDATE TASK
@@ -126,11 +128,10 @@ public class PrintMenus {
 
     //MENSAJE TASCA MARCADA COMO ELIMINADA
     public static void printDeleteTask(int id){
-        System.out.println("Tarea con ID: "+id+" Eliminada correctamente!");
+        System.out.println(" ___________________________________________________");
+        System.out.println("| Tarea con ID: " + id + " Eliminada correctamente!");
+        System.out.println("|___________________________________________________");
+
     }
-
-
-
-
 
 }

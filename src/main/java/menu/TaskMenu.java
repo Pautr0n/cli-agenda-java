@@ -56,7 +56,8 @@ public class TaskMenu {
     // Crear tarea (construye el DTO y llama al metodo de taskservice)
     private void createTask() {
 
-        System.out.print("Title: ");
+        System.out.println("\n***CREA TU TAREA***");
+        System.out.print("Título: ");
         String title = scanner.nextLine();
 
         System.out.print("Content: ");
