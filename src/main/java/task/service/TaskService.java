@@ -16,6 +16,7 @@ import task.model.Task;
 import task.repository.TaskRepository;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class TaskService {
@@ -205,7 +206,7 @@ public class TaskService {
 
         try {
             LocalDate.parse(dto.expirationDate());
-        } catch (Exception e) {
+        } catch (DateTimeParseException e) {
             throw new ValidationException("Expiration date format must be yyyy-MM-dd", e);
         }
 
@@ -213,13 +214,13 @@ public class TaskService {
 
     private void validateTaskId(TaskIdDTO id) {
         if (id == null) {
-            throw new IllegalArgumentException("DTO record instance cannot be null");
+            throw new ValidationException("DTO record instance cannot be null");
         }
         if (id.id() == null) {
-            throw new IllegalArgumentException("Task id value cannot be null");
+            throw new ValidationException("Task id value cannot be null");
         }
         if (id.id() <= 0) {
-            throw new IllegalArgumentException("Invalid id: " + id.id());
+            throw new ValidationException("Invalid id: " + id.id());
         }
     }
 
@@ -227,11 +228,11 @@ public class TaskService {
     private void validateTaskUpdate(TaskUpdateDTO dto) {
 
         if (dto == null) {
-            throw new IllegalArgumentException("DTO record instance cannot be null");
+            throw new ValidationException("DTO record instance cannot be null");
         }
 
         if (dto.id() <= 0) {
-            throw new IllegalArgumentException("Invalid id.");
+            throw new ValidationException("Invalid id.");
         }
 
         if ((dto.title() == null || dto.title().isBlank()) &&
@@ -239,16 +240,14 @@ public class TaskService {
                 (dto.expirationDate() == null || dto.expirationDate().isBlank()) &&
                 (dto.priority() == null || dto.priority().isBlank())) {
 
-
-            throw new IllegalArgumentException("No fields provided to update");
-
+            throw new ValidationException("No fields provided to update");
         }
 
         if (dto.expirationDate() != null && !dto.expirationDate().isBlank()) {
             try {
                 LocalDate.parse(dto.expirationDate());
             } catch (Exception e) {
-                throw new IllegalArgumentException("Expiration date format must be yyyy-MM-dd");
+                throw new ValidationException("Expiration date format must be yyyy-MM-dd");
             }
         }
 
