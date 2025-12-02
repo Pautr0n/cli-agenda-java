@@ -8,9 +8,7 @@ import note.dto.NoteIdDTO;
 import note.dto.NoteOutputDTO;
 import note.dto.NoteUpdateDTO;
 import note.service.NoteService;
-import task.dto.TaskDTO;
-import task.dto.TaskIdDTO;
-import task.service.TaskService;
+
 
 import java.util.List;
 import java.util.Scanner;
@@ -74,7 +72,7 @@ public class NoteMenu {
 
     private void listNotes() {
 
-        List<NoteOutputDTO> notesList = List.of();
+        List<NoteOutputDTO> notesList;
         try {
             notesList = noteService.getAllNotes();
             printNoteList(notesList);
