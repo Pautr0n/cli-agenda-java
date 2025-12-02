@@ -107,8 +107,13 @@ public class NoteMenu {
     }
 
     private void updateNote() {
-        System.out.print("ID of the NOTE to be updated: ");
-        int id = scanner.nextInt();
+
+        int id;
+        while(!scanner.hasNextInt()){
+            System.out.print("ID of the NOTE to be updated: ");
+            scanner.nextLine();
+        }
+        id = scanner.nextInt();
         scanner.nextLine();
 
         String title = null;
