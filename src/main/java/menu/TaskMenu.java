@@ -1,6 +1,7 @@
 package menu;
 
 import common.exception.*;
+import common.utils.FormatValidator;
 import task.dto.TaskDTO;
 import task.dto.TaskIdDTO;
 import task.dto.TaskOutputDTO;
@@ -8,6 +9,7 @@ import task.dto.TaskUpdateDTO;
 import task.service.TaskService;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
@@ -207,12 +209,23 @@ public class TaskMenu {
                     content = scanner.nextLine();
                 }
                 case 3 -> {
-                    System.out.print("New Expiration Date (YYYY-MM-DD): ");
-                    expirationDate = scanner.nextLine();
+                    boolean checkDate = false;
+                    while(checkDate == false){
+                        System.out.print("New Expiration Date (YYYY-MM-DD): ");
+                        expirationDate = scanner.nextLine();
+                        checkDate = FormatValidator.isValidLocalDate(expirationDate);
+                        if(!checkDate) System.out.println("Date Format not valid. Try again.");
+                    }
                 }
                 case 4 -> {
-                    System.out.print("New priority (LOW, MEDIUM, HIGH): ");
-                    priorityText = scanner.nextLine();
+                    boolean checkPriority = false;
+                    while(checkPriority == false){
+                        System.out.print("New priority (LOW, MEDIUM, HIGH): ");
+                        priorityText = scanner.nextLine();
+                        checkPriority = FormatValidator.isValidPriority(priorityText);
+                        if(!checkPriority) System.out.println(priorityText + " is not a valid priority. Try again.");
+                    }
+
                 }
                 case 0 -> System.out.println("Exiting Update Menu!");
                 default -> System.out.println("Invalid Option.");
@@ -232,7 +245,15 @@ public class TaskMenu {
 
 
     private void deleteTask() {
+
+
         System.out.print("ID de la tarea a eliminar: ");
+
+        while (!scanner.hasNextInt()) {
+            System.out.print("Introduce a valid integer number: ");
+            scanner.nextLine();
+        }
+
         int id = scanner.nextInt();
         scanner.nextLine();
 
@@ -241,9 +262,9 @@ public class TaskMenu {
         try {
             TaskOutputDTO dtoOutput = taskService.getTaskById(dto);
             printMenuCreateTask(dtoOutput);
-            System.out.println("Estas seguro que quieres eliminar la tarea, (S/N)");
 
             while(true){
+                System.out.println("Estas seguro que quieres eliminar la tarea, (S/N)");
                 String confirmation = scanner.nextLine().toUpperCase();
                 switch (confirmation){
                     case "S"->{
@@ -251,11 +272,11 @@ public class TaskMenu {
                         printDeleteTask(id);
                     }
                     case "N"-> {
+                        System.out.println("Aborting delete task");
                         return;
                     }
                     default -> System.out.println("Invalid Option.");
                 }
-                return;
             }
 
 
@@ -263,4 +284,5 @@ public class TaskMenu {
             MenuExceptionHandler.handle(e);
         }
     }
+
 }
