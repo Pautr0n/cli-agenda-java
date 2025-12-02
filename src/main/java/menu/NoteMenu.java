@@ -107,13 +107,12 @@ public class NoteMenu {
     }
 
     private void updateNote() {
-
-        int id;
+        System.out.print("ID of the NOTE to be updated: ");
         while(!scanner.hasNextInt()){
-            System.out.print("ID of the NOTE to be updated: ");
+            System.out.print("Invalid ID, try again: ");
             scanner.nextLine();
         }
-        id = scanner.nextInt();
+        int id = scanner.nextInt();
         scanner.nextLine();
 
         String title = null;

@@ -175,12 +175,12 @@ public class TaskMenu {
 
 
     private void updateTask() {
-        int id;
+        System.out.print("ID of the TASK to be updated: ");
         while(!scanner.hasNextInt()){
-            System.out.print("ID of the TASK to be updated: ");
+            System.out.print("Invalid ID, try again: ");
             scanner.nextLine();
         }
-        id = scanner.nextInt();
+        int id = scanner.nextInt();
         scanner.nextLine();
 
 
