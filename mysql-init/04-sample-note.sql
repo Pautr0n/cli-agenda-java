@@ -8,4 +8,4 @@ VALUES
 
 ('Enviar email al profesor', 'Enviar avances del proyecto de agenda',  NOW()),
 
-('Pagar factura de luz', 'Revisar consumo y pagar antes del vencimiento', NOW()),
+('Pagar factura de luz', 'Revisar consumo y pagar antes del vencimiento', NOW());
