@@ -19,6 +19,17 @@ public class PrintMenus {
         System.out.print("Elige una opción: \n");
     }
 
+    public static void showNoteMenu(){
+        System.out.println("\n ***** MENÚ DE NOTAS ****");
+        System.out.println("1. Crear nota");
+        System.out.println("2. Listar notas");
+        System.out.println("3. Ver nota por ID");
+        System.out.println("4. Actualizar nota");
+        System.out.println("5. Eliminar nota");
+        System.out.println("6. Volver");
+        System.out.print("Elige una opción: \n");
+    }
+
 
     public static void printMainMenu() {
 
@@ -57,7 +68,14 @@ public class PrintMenus {
 
     }
 
-    //FALTA LIST TASK
+    public static void printMenuCreateNote(NoteOutputDTO dto){
+        System.out.println(" __________________________________________________");
+        System.out.println("| ID: " + dto.id());
+        System.out.println("| Título: " + dto.title());
+        System.out.println("| Contenido: " + dto.content());
+        System.out.println("|___________________________________________________");
+    }
+
 
     //MENU INTERNO LIST TASK
     public static void printMenuListTask (){
@@ -87,6 +105,20 @@ public class PrintMenus {
         }
     }
 
+    public static void printNoteList(List<NoteOutputDTO> notes){
+        if (notes.isEmpty()) {
+            System.out.println("No hay notas para mostrar.");
+            return;
+        }
+        System.out.println("\n***LISTADO DE NOTAS***");
+        for (NoteOutputDTO dto : notes) {
+            System.out.println("---------------------------------->");
+            System.out.println("ID: " + dto.id());
+            System.out.println("Título: " + dto.title());
+
+        }
+    }
+
 
     //MENSAJE TASCA MARCADA COMO COMPLETADA
     public static void printMarkTask(TaskOutputDTO dto){
@@ -101,20 +133,27 @@ public class PrintMenus {
 
     //MENU INTERNO UPDATE TASK
 
-    public static void printMenuUpdate (){
+    public static void printMenuUpdateTask(){
 
         System.out.println("\n| ¿Qué contenido deseas modificar?");
         System.out.println("| 1- Título");
         System.out.println("| 2- Contenido");
         System.out.println("| 3- Fecha");
         System.out.println("| 4- Prioridad");
-        System.out.println("| 0- Salir");
+        System.out.println("| 0- Salir y aceptar cambios.");
 
+    }
+
+    public static void printMenuUpdateNote(){
+        System.out.println("\n| ¿Qué contenido deseas modificar?");
+        System.out.println("| 1- Título");
+        System.out.println("| 2- Contenido");
+        System.out.println("| 0- Salir y aceptar cambios");
     }
 
 
     // IMPRESION UPDATE TASK
-    public static void printMenuCreateUpdateTask(TaskOutputDTO dto) {
+    public static void printMenuTaskUpdated(TaskOutputDTO dto) {
         System.out.println("***TAREA ACTUALIZADA***");
         System.out.println(" __________________________________________________");
         System.out.println("| ID: " + dto.id());
@@ -128,6 +167,16 @@ public class PrintMenus {
 
     }
 
+    public static void printMenuNoteUpdated(NoteOutputDTO dto){
+        System.out.println("***NOTA ACTUALIZADA***");
+        System.out.println(" __________________________________________________");
+        System.out.println("| ID: " + dto.id());
+        System.out.println("| Título: " + dto.title());
+        System.out.println("| Contenido: " + dto.content());
+        System.out.println("|___________________________________________________");
+
+    }
+
     //IMPRESIÓN DELETE TASK
 
     //MENSAJE TASCA MARCADA COMO ELIMINADA
@@ -136,6 +185,12 @@ public class PrintMenus {
         System.out.println("| Tarea con ID: " + id + " Eliminada correctamente!");
         System.out.println("|___________________________________________________");
 
+    }
+
+    public static void printDeleteNote(int id){
+        System.out.println(" ___________________________________________________");
+        System.out.println("| Nota con ID: " + id + " Eliminada correctamente!");
+        System.out.println("|___________________________________________________");
     }
 
 }
