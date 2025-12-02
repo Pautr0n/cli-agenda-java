@@ -32,7 +32,7 @@ public class NoteService {
 
 //CRUD
 
-    // 1.Create
+    // 1.Create note
     public NoteOutputDTO createNote (NoteDTO dto) {
 
         try {
@@ -50,82 +50,74 @@ public class NoteService {
 
     // continuar a partir de aqui
 
-    //Read One
-    public TaskOutputDTO getTaskById(TaskIdDTO id) {
+    //Read One note
+    public NoteOutputDTO getNoteById(NoteIdDTO id) {
         try {
-            validateTaskId(id);
-            Task task = taskRepository.getById(id.id());
+            validateId(id);
+            Note note = noteRepository.getById(id.id());
 
-            if (task == null) {
-                throw new IllegalArgumentException("Task with id " + id.id() + " not found");
+            if (note == null) {
+                throw new IllegalArgumentException("Note with id " + id.id() + " not found");
             }
 
-            return TaskDTOMapper.taskToDTO(task);//PAU: modificado el Mapper:
+            return NoteDTOMapper.noteToDTO(note);
 
         } catch (Exception e) {
-            throw new DataAccessException("Error retrieving task with id: " + id.id(), e);
+            throw new DataAccessException("Error retrieving note with id: " + id.id(), e);
         }
     }
 
-    //Read ALL
-    public List<TaskOutputDTO> getAllTasks() {
+    //Read ALL Notes
+    public List<NoteOutputDTO> getAllNotes() {
         try {
 
-            return taskRepository.getAll().stream()
-                    .map(TaskDTOMapper::taskToDTO)  //PAU: modificado el Mapper:
+            return noteRepository.getAll().stream()
+                    .map(NoteDTOMapper::noteToDTO)
                     .toList();
 
         } catch (Exception e) {
-            throw new DataAccessException("Error retrieving task from database.", e);
+            throw new DataAccessException("Error retrieving note from database.", e);
         }
     }
 
 
     //Update
-    public TaskOutputDTO updateTask(TaskUpdateDTO dto) {
+    public NoteOutputDTO updateNote(NoteUpdateDTO dto) {
         try {
 
-            validateTaskUpdate(dto);
+            validateNoteUpdate(dto);
 
-            Task task = taskRepository.getById(dto.id());
+             Note note = noteRepository.getById(dto.id());
 
             if (dto.title() != null && !dto.title().isBlank()) {
-                task.setTitle(dto.title());
+                note.setTitle(dto.title());
             }
 
             if (dto.content() != null && !dto.content().isBlank()) {
-                task.setContent(dto.content());
+                note.setContent(dto.content());
             }
 
-            if (dto.expirationDate() != null && !dto.expirationDate().isBlank()) {
-                task.setExpirationDate(LocalDate.parse(dto.expirationDate()));
-            }
+            noteRepository.update(note);
 
-            if (dto.priority() != null && !dto.priority().isBlank()) {
-                task.setPriority(PriorityType.valueOf(dto.priority().toUpperCase()));
-            }
-
-            taskRepository.update(task);
-
-            return TaskDTOMapper.taskToDTO(task);
+            return NoteDTOMapper.noteToDTO(note);
 
         } catch (Exception e) {
-            throw new DataAccessException("Error updating task with id: " + dto.id() + " ", e);
+            throw new DataAccessException("Error updating note with id: " + dto.id() + " ", e);
         }
     }
 
     //Delete task
-    public void deleteTask(TaskIdDTO id) {
+    public void deleteNote(NoteIdDTO id) {
 
         try {
 
-            validateTaskId(id);
+            validateNote(id);
 
-            taskRepository.remove(id.id());
+            noteRepository.remove(id.id());
 
 
         } catch (DataAccessException e) {
-            throw new DataAccessException("Exception while deleting task with id: " + id.id(), e);
+            throw new DataAccessException("Exception while deleting note with id: " + id.id(), e);
         }
     }
 
