@@ -64,7 +64,7 @@ public class TaskService {
 
             return TaskDTOMapper.taskToDTO(task);//PAU: modificado el Mapper:
 
-        } catch (EntityNotFoundException | DataAccessException e) {
+        } catch (EntityNotFoundException | DataAccessException | ValidationException e) {
             throw e;
         } catch (Exception e) {
             throw new ServiceException("TaskService [getTaskById]: Unexpected error retrieving task with id " + id.id(), e);

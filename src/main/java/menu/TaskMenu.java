@@ -1,7 +1,6 @@
 package menu;
 
 import common.exception.*;
-import common.utils.PrintMenus;
 import task.dto.TaskDTO;
 import task.dto.TaskIdDTO;
 import task.dto.TaskOutputDTO;
@@ -30,7 +29,7 @@ public class TaskMenu {
 
         while (option != 0) {
 
-            PrintMenus.showTaskMenu();
+            showTaskMenu();
 
             while (!scanner.hasNextInt()) {
                 System.out.print("Introduce a valid option: ");
@@ -106,7 +105,7 @@ public class TaskMenu {
             printMenuListTask();
 
             while (!scanner.hasNextInt()) {
-                System.out.print("IntIntroduce a valid option: ");
+                System.out.print("Introduce a valid option: ");
                 scanner.nextLine();
             }
 
@@ -114,10 +113,11 @@ public class TaskMenu {
             scanner.nextLine(); // limpiar buffer
 
             try {
-                List<TaskOutputDTO> listTasks;
+                List<TaskOutputDTO> listTasks = List.of();
                 switch (option) {
                     case 1 -> listTasks = taskService.getAllTasks();
                     case 2, 3 -> listTasks = taskService.getTasksByStatus(option);
+                    case 0 -> System.out.println("Going back to main menu.");
                     default -> {
                         System.out.println("Invalid option.");
                         continue;
@@ -133,6 +133,12 @@ public class TaskMenu {
 
     private void getTaskById() {
         System.out.print("Introduce el ID de la tarea: ");
+
+        while (!scanner.hasNextInt()) {
+            System.out.print("Introduce a valid option: ");
+            scanner.nextLine();
+        }
+
         int id = scanner.nextInt();
         scanner.nextLine();
 
@@ -141,6 +147,8 @@ public class TaskMenu {
         try {
             TaskOutputDTO dtoOutput = taskService.getTaskById(dto);
             printMenuCreateTask(dtoOutput);
+        } catch (ValidationException e){
+            MenuExceptionHandler.handle(e);
         } catch (Exception e) {
             MenuExceptionHandler.handle(e);
         }
@@ -231,8 +239,26 @@ public class TaskMenu {
         TaskIdDTO dto = new TaskIdDTO(id);
 
         try {
-            taskService.deleteTask(dto);
-            printDeleteTask(id);
+            TaskOutputDTO dtoOutput = taskService.getTaskById(dto);
+            printMenuCreateTask(dtoOutput);
+            System.out.println("Estas seguro que quieres eliminar la tarea, (S/N)");
+
+            while(true){
+                String confirmation = scanner.nextLine().toUpperCase();
+                switch (confirmation){
+                    case "S"->{
+                        taskService.deleteTask(dto);
+                        printDeleteTask(id);
+                    }
+                    case "N"-> {
+                        return;
+                    }
+                    default -> System.out.println("Invalid Option.");
+                }
+                return;
+            }
+
+
         }  catch (Exception e) {
             MenuExceptionHandler.handle(e);
         }
