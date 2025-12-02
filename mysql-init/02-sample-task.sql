@@ -6,7 +6,7 @@ VALUES
 
 ('Hacer deporte', 'Ir al gimnasio 1 hora', '2025-11-30', NOW(), 'LOW', 'DONE'),
 
-('Enviar email al profesor', 'Enviar avances del proyecto de agenda', '2025-12-15', NOW(), 'HIGH', 'NOTDONE');
+('Enviar email al profesor', 'Enviar avances del proyecto de agenda', '2025-12-15', NOW(), 'HIGH', 'NOTDONE'),
 
 ('Pagar factura de luz', 'Revisar consumo y pagar antes del vencimiento', '2025-12-10', NOW(), 'MEDIUM', 'NOTDONE'),
 
