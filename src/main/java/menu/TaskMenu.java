@@ -245,7 +245,15 @@ public class TaskMenu {
 
 
     private void deleteTask() {
+
+
         System.out.print("ID de la tarea a eliminar: ");
+
+        while (!scanner.hasNextInt()) {
+            System.out.print("Introduce a valid integer number: ");
+            scanner.nextLine();
+        }
+
         int id = scanner.nextInt();
         scanner.nextLine();
 
