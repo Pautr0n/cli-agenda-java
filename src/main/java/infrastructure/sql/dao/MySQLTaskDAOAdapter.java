@@ -2,6 +2,7 @@ package infrastructure.sql.dao;
 
 import common.dao.GenericDAO;
 import common.exception.DataAccessException;
+import common.exception.EntityNotFoundException;
 import task.enums.DoneType;
 import task.enums.PriorityType;
 import task.model.Task;
@@ -47,7 +48,7 @@ public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
             }
             return entity;
         } catch (SQLException e) {
-            throw new DataAccessException("Error inserting task", e);
+            throw new DataAccessException("DAO error [update]: Error inserting task", e);
         }
 
     }
@@ -66,7 +67,7 @@ public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
             }
             return null;
         } catch (SQLException e) {
-            throw new DataAccessException("Error finding task with id " + id, e);
+            throw new DataAccessException("DAO error [executeQuery]:Error finding task with id " + id, e);
         }
     }
 
@@ -84,7 +85,7 @@ public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
             }
             return tasks;
         } catch (SQLException e) {
-            throw new DataAccessException("Error finding all tasks.", e);
+            throw new DataAccessException("DAO error [executeQuery]: Error finding all tasks.", e);
         }
     }
 
@@ -107,10 +108,10 @@ public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
                 statement.setString(5, entity.getDoneStatus().name());
                 statement.setInt(6, entity.getId());
                 int rows = statement.executeUpdate();
-                if(rows==0) throw new DataAccessException("No task found with id " + entity.getId());
+                if(rows==0) throw new EntityNotFoundException("No task found with id " + entity.getId());
             }
         }catch (SQLException e) {
-            throw new DataAccessException("Error updating tasks with id " + entity.getId(), e);
+            throw new DataAccessException("DAO error [update]: Error updating tasks with id " + entity.getId(), e);
         }
     }
 
@@ -122,10 +123,10 @@ public class MySQLTaskDAOAdapter implements GenericDAO<Task> {
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setInt(1, id);
                 int rows = statement.executeUpdate();
-                if(rows==0) throw new DataAccessException("No task found with id " + id);
+                if(rows==0) throw new EntityNotFoundException("No task found with id " + id);
             }
         }catch (SQLException e) {
-            throw new DataAccessException("Error deleting the task with id " + id, e);
+            throw new DataAccessException("DAO error [update]: Error deleting the task with id " + id, e);
         }
     }
 

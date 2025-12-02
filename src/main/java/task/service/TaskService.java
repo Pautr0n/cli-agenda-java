@@ -1,6 +1,10 @@
 package task.service;
 
+
 import common.exception.DataAccessException;
+import common.exception.EntityNotFoundException;
+import common.exception.ServiceException;
+import common.exception.ValidationException;
 import task.dto.TaskDTO;
 import task.dto.TaskIdDTO;
 import task.dto.TaskOutputDTO;
@@ -12,6 +16,7 @@ import task.model.Task;
 import task.repository.TaskRepository;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 public class TaskService {
@@ -39,9 +44,12 @@ public class TaskService {
 
             return TaskDTOMapper.taskToDTO(task);
 
+        } catch (DataAccessException e) {
+            throw e;
         } catch (Exception e) {
-            throw new DataAccessException("Error creating a task", e);
+            throw new ServiceException("TaskService [createTask]: Unexpected error creating task", e);
         }
+
     }
 
     //Read One
@@ -56,9 +64,12 @@ public class TaskService {
 
             return TaskDTOMapper.taskToDTO(task);//PAU: modificado el Mapper:
 
+        } catch (EntityNotFoundException | DataAccessException | ValidationException e) {
+            throw e;
         } catch (Exception e) {
-            throw new DataAccessException("Error retrieving task with id: " + id.id(), e);
+            throw new ServiceException("TaskService [getTaskById]: Unexpected error retrieving task with id " + id.id(), e);
         }
+
     }
 
     //Read ALL
@@ -69,8 +80,10 @@ public class TaskService {
                     .map(TaskDTOMapper::taskToDTO)  //PAU: modificado el Mapper:
                     .toList();
 
+        } catch (DataAccessException e) {
+            throw e;
         } catch (Exception e) {
-            throw new DataAccessException("Error retrieving task from database.", e);
+            throw new ServiceException("TaskService [getAllTask]: Unexpected error retrieving tasks", e);
         }
     }
 
@@ -79,15 +92,18 @@ public class TaskService {
         switch (option) {
             case 2 -> doneType = DoneType.NOTDONE;
             case 3 -> doneType = DoneType.DONE;
-            default -> throw new DataAccessException("Option not valid");
+            default -> throw new ValidationException("Option not valid");
+
         }
 
         try {
             return taskRepository.getAll().stream()
                     .filter(t -> t.getDoneStatus() == doneType)
                     .map(TaskDTOMapper::taskToDTO).toList();
+        } catch (DataAccessException e) {
+            throw e;
         } catch (Exception e) {
-            throw new DataAccessException("Error retrieving filtered tasks", e);
+            throw new ServiceException("TaskService [getTaskByStatus]: Unexpected error retrieving filtered tasks", e);
         }
     }
 
@@ -99,27 +115,31 @@ public class TaskService {
 
             Task task = taskRepository.getById(id.id());
             if (task == null) {
-                throw new IllegalArgumentException("Task with id: " + id.id() + " not found.");
+                throw new EntityNotFoundException("Task with id " + id.id() + " not found");
             }
             task.setDoneStatus(DoneType.DONE);
             taskRepository.update(task);
 
             return TaskDTOMapper.taskToDTO(task);
 
+        } catch (EntityNotFoundException | DataAccessException e) {
+            throw e;
         } catch (Exception e) {
-            throw new DataAccessException("Error marking completed task, id=" + id.id(), e);
+            throw new ServiceException("TaskService [markTaskCompleted]: Unexpected error marking task completed id=" + id.id(), e);
         }
-
     }
 
 
     //Update
     public TaskOutputDTO updateTask(TaskUpdateDTO dto) {
+        validateTaskUpdate(dto);
+
         try {
-
-            validateTaskUpdate(dto);
-
             Task task = taskRepository.getById(dto.id());
+
+            if (task == null) {
+                throw new EntityNotFoundException("Task with id " + dto.id() + " not found");
+            }
 
             if (dto.title() != null && !dto.title().isBlank()) {
                 task.setTitle(dto.title());
@@ -141,23 +161,24 @@ public class TaskService {
 
             return TaskDTOMapper.taskToDTO(task);
 
+        } catch (EntityNotFoundException | DataAccessException e) {
+            throw e;
         } catch (Exception e) {
-            throw new DataAccessException("Error updating task with id: " + dto.id() + " ", e);
+            throw new ServiceException("TaskService [updateTask]: Unexpected error updating task id=" + dto.id(), e);
         }
+
     }
 
     //Delete task
     public void deleteTask(TaskIdDTO id) {
 
         try {
-
             validateTaskId(id);
-
             taskRepository.remove(id.id());
-
-
-        } catch (DataAccessException e) {
-            throw new DataAccessException("Exception while deleting task with id: " + id.id(), e);
+        } catch (EntityNotFoundException | DataAccessException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ServiceException("TaskService [deleteTask]: Unexpected error deleting task id=" + id.id(), e);
         }
     }
 
@@ -168,38 +189,38 @@ public class TaskService {
     private void validateTaskDTOCreate(TaskDTO dto) {
 
         if (dto == null) {
-            throw new IllegalArgumentException("DTO record instance cannot be null");
+            throw new  ValidationException("DTO record instance cannot be null");
         }
 
         if (dto.content() == null || dto.content().isBlank()) {
-            throw new IllegalArgumentException("Content cannot be empty");
+            throw new ValidationException("Content cannot be empty");
         }
 
         if (dto.title() == null || dto.title().isBlank()) {
-            throw new IllegalArgumentException("Title cannot be empty");
+            throw new ValidationException("Title cannot be empty");
         }
 
         if (dto.expirationDate() == null || dto.expirationDate().isBlank()) {
-            throw new IllegalArgumentException("Expiration date cannot be empty");
+            throw new ValidationException("Expiration date cannot be empty");
         }
 
         try {
             LocalDate.parse(dto.expirationDate());
-        } catch (Exception e) {
-            throw new IllegalArgumentException("Expiration date format must be yyyy-MM-dd", e);
+        } catch (DateTimeParseException e) {
+            throw new ValidationException("Expiration date format must be yyyy-MM-dd", e);
         }
 
     }
 
     private void validateTaskId(TaskIdDTO id) {
         if (id == null) {
-            throw new IllegalArgumentException("DTO record instance cannot be null");
+            throw new ValidationException("DTO record instance cannot be null");
         }
         if (id.id() == null) {
-            throw new IllegalArgumentException("Task id value cannot be null");
+            throw new ValidationException("Task id value cannot be null");
         }
         if (id.id() <= 0) {
-            throw new IllegalArgumentException("Invalid id: " + id.id());
+            throw new ValidationException("Invalid id: " + id.id());
         }
     }
 
@@ -207,11 +228,11 @@ public class TaskService {
     private void validateTaskUpdate(TaskUpdateDTO dto) {
 
         if (dto == null) {
-            throw new IllegalArgumentException("DTO record instance cannot be null");
+            throw new ValidationException("DTO record instance cannot be null");
         }
 
         if (dto.id() <= 0) {
-            throw new IllegalArgumentException("Invalid id.");
+            throw new ValidationException("Invalid id.");
         }
 
         if ((dto.title() == null || dto.title().isBlank()) &&
@@ -219,16 +240,14 @@ public class TaskService {
                 (dto.expirationDate() == null || dto.expirationDate().isBlank()) &&
                 (dto.priority() == null || dto.priority().isBlank())) {
 
-
-            throw new IllegalArgumentException("No fields provided to update");
-
+            throw new ValidationException("No fields provided to update");
         }
 
         if (dto.expirationDate() != null && !dto.expirationDate().isBlank()) {
             try {
                 LocalDate.parse(dto.expirationDate());
             } catch (Exception e) {
-                throw new IllegalArgumentException("Expiration date format must be yyyy-MM-dd");
+                throw new ValidationException("Expiration date format must be yyyy-MM-dd");
             }
         }
 
