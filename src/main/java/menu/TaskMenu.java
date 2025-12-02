@@ -1,9 +1,6 @@
 package menu;
 
-import common.exception.DataAccessException;
-import common.exception.EntityNotFoundException;
-import common.exception.ServiceException;
-import common.exception.ValidationException;
+import common.exception.*;
 import common.utils.PrintMenus;
 import task.dto.TaskDTO;
 import task.dto.TaskIdDTO;
@@ -88,14 +85,8 @@ public class TaskMenu {
         try {
             TaskOutputDTO dtoOutput = taskService.createTask(dto);
             printMenuCreateTask(dtoOutput);
-        } catch (ValidationException e) {
-            System.out.println("Validation error: " + e.getMessage());
-        } catch (EntityNotFoundException e) {
-            System.out.println("Task not found: " + e.getMessage());
-        } catch (DataAccessException e) {
-            System.out.println("Technical error form the database: " + e.getMessage());
-        } catch (ServiceException e) {
-            System.out.println("Unexpected Error: " + e.getMessage());
+        }  catch (Exception e) {
+            MenuExceptionHandler.handle(e);
         }
     }
 
@@ -124,12 +115,8 @@ public class TaskMenu {
                     }
                 }
                 printTaskList(listTasks);
-            } catch (ValidationException e) {
-                System.out.println("Validation Error: " + e.getMessage());
-            } catch (DataAccessException e) {
-                System.out.println("Technical error form the database: " + e.getMessage());
-            } catch (ServiceException e) {
-                System.out.println("Unexpected Error: " + e.getMessage());
+            }  catch (Exception e) {
+                MenuExceptionHandler.handle(e);
             }
         }
 
@@ -145,16 +132,9 @@ public class TaskMenu {
         try {
             TaskOutputDTO dtoOutput = taskService.getTaskById(dto);
             printMenuCreateTask(dtoOutput);
-        } catch (EntityNotFoundException e) {
-            System.out.println("Task not found: " + e.getMessage());
-        } catch (ValidationException e) {
-            System.out.println("Validation Error: " + e.getMessage());
-        } catch (DataAccessException e) {
-            System.out.println("Technical error form the database: " + e.getMessage());
-        } catch (ServiceException e) {
-            System.out.println("Unexpected Error: " + e.getMessage());
+        } catch (Exception e) {
+            MenuExceptionHandler.handle(e);
         }
-
     }
 
 
@@ -169,14 +149,8 @@ public class TaskMenu {
             TaskOutputDTO dtoOutput = taskService.markTaskCompleted(dto);
             printMarkTask(dtoOutput);
 
-        } catch (EntityNotFoundException e) {
-            System.out.println("Task not found: " + e.getMessage());
-        } catch (ValidationException e) {
-            System.out.println("Validation Error: " + e.getMessage());
-        } catch (DataAccessException e) {
-            System.out.println("Technical error form the database: " + e.getMessage());
-        } catch (ServiceException e) {
-            System.out.println("Unexpected Error: " + e.getMessage());
+        }  catch (Exception e) {
+            MenuExceptionHandler.handle(e);
         }
 
     }
@@ -233,14 +207,8 @@ public class TaskMenu {
         try {
             TaskOutputDTO dtoOutput = taskService.updateTask(dto);
             printMenuCreateUpdateTask(dtoOutput);
-        } catch (EntityNotFoundException e) {
-            System.out.println("Task not found: " + e.getMessage());
-        } catch (ValidationException e) {
-            System.out.println("Validation Error: " + e.getMessage());
-        } catch (DataAccessException e) {
-            System.out.println("Technical error form the database: " + e.getMessage());
-        } catch (ServiceException e) {
-            System.out.println("Unexpected Error: " + e.getMessage());
+        }  catch (Exception e) {
+            MenuExceptionHandler.handle(e);
         }
 
     }
@@ -256,14 +224,8 @@ public class TaskMenu {
         try {
             taskService.deleteTask(dto);
             printDeleteTask(id);
-        } catch (EntityNotFoundException e) {
-            System.out.println("Task not found: " + e.getMessage());
-        } catch (ValidationException e) {
-            System.out.println("Validation Error: " + e.getMessage());
-        } catch (DataAccessException e) {
-            System.out.println("Technical error form the database: " + e.getMessage());
-        } catch (ServiceException e) {
-            System.out.println("Unexpected Error: " + e.getMessage());
+        }  catch (Exception e) {
+            MenuExceptionHandler.handle(e);
         }
     }
 }
