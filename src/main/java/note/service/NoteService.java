@@ -3,9 +3,19 @@ package note.service;
 import common.exception.DataAccessException;
 import common.exception.EntityNotFoundException;
 import common.exception.ValidationException;
+import note.dto.NoteDTO;
+import note.dto.NoteIdDTO;
+import note.dto.NoteOutputDTO;
+import note.dto.NoteUpdateDTO;
+import note.mapper.NoteDTOMapper;
 import note.model.Note;
 import note.repository.NoteRepository;
-import task.dto.TaskDTO;
+import note.dto.*;
+import common.exception.*;
+
+
+
+import java.util.List;
 
 public class NoteService {
 
@@ -29,10 +39,10 @@ public class NoteService {
 
             return NoteDTOMapper.noteToDTO(note);
 
-        } catch (DataAccessException e) {
+        } catch (EntityNotFoundException | DataAccessException | ValidationException e ) {
             throw e;
         } catch (Exception e) {
-            throw new ServiceException("NoteService [createNtoe]: Unexpected error creating note", e);
+            throw new ServiceException("NoteService [createNote]: Unexpected error creating note", e);
         }
 
     }
@@ -63,6 +73,7 @@ public class NoteService {
         try {
 
             return noteRepository.getAll().stream()
+                    .map(NoteDTOMapper::noteToDTO)
                     .toList();
 
         } catch (DataAccessException e) {
@@ -70,7 +81,7 @@ public class NoteService {
         } catch (Exception e) {
             throw new ServiceException("NoteService [getAllNotes]: Unexpected error retrieving note", e);
         }
-    }g
+    }
 
 
     //Update NOTE
@@ -125,7 +136,7 @@ public class NoteService {
 
 
     //Validations
-    private void validateNoteDTOCreate(TaskDTO dto) {
+    private void validateNoteDTOCreate(NoteDTO dto) {
 
         if (dto == null) {
             throw new  ValidationException("DTO record instance cannot be null");
@@ -153,7 +164,6 @@ public class NoteService {
             throw new ValidationException("Invalid id: " + id.id());
         }
     }
-
 
     private void validateNoteUpdate(NoteUpdateDTO dto) {
 
