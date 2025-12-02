@@ -1,4 +1,4 @@
-INSERT INTO task (title, content, , creation_date)
+INSERT INTO note (title, content, , creation_date)
 VALUES
 ('Comprar pan', 'Comprar pan y leche en el supermercado', NOW()),
 
