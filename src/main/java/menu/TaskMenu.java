@@ -62,15 +62,19 @@ public class TaskMenu {
         System.out.print("Content: ");
         String content = scanner.nextLine();
 
-        System.out.print("Expiration date (YYYY-MM-DD): ");
-        String expirationDate = scanner.nextLine();
-        try {
-            LocalDate.parse(expirationDate);
-        } catch (DateTimeParseException e) {
-            System.out.println("Formato de fecha inválido. Debe ser YYYY-MM-DD.");
-            return;
-        }
+        String expirationDate;
+        while(true){
 
+            System.out.print("Expiration date (YYYY-MM-DD): ");
+            expirationDate = scanner.nextLine();
+            try {
+                LocalDate.parse(expirationDate);
+                break;
+            } catch (DateTimeParseException e) {
+                System.out.println("Formato de fecha inválido. Debe ser YYYY-MM-DD.");
+            }
+
+        }
 
         System.out.print("Prioridad (LOW, MEDIUM, HIGH): ");
         String priorityText = scanner.nextLine().toUpperCase();
