@@ -12,13 +12,10 @@ import note.model.Note;
 import note.repository.NoteRepository;
 import note.dto.*;
 import common.exception.*;
-
-
-
 import java.util.List;
 
-public class NoteService {
 
+public class NoteService {
 
     private final NoteRepository noteRepository;
 
@@ -126,7 +123,7 @@ public class NoteService {
         } catch (EntityNotFoundException | DataAccessException e) {
             throw e;
         } catch (Exception e) {
-            throw new ServiceException("NoteService [deleteTask]: Unexpected error deleting note id=" + id.id(), e);
+            throw new ServiceException("NoteService [deleteNote]: Unexpected error deleting note id=" + id.id(), e);
         }
     }
 
@@ -182,7 +179,6 @@ public class NoteService {
         }
 
     }
-
 
 }
 
