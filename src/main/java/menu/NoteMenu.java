@@ -7,6 +7,7 @@ import note.dto.NoteDTO;
 import note.dto.NoteIdDTO;
 import note.dto.NoteOutputDTO;
 import note.dto.NoteUpdateDTO;
+import note.service.NoteService;
 import task.dto.TaskDTO;
 import task.dto.TaskIdDTO;
 import task.service.TaskService;
@@ -19,14 +20,14 @@ import static common.utils.PrintMenus.*;
 public class NoteMenu {
 
     private final Scanner scanner;
-    private final TaskService taskService;
+    private final NoteService noteService;
 
-    public NoteMenu(Scanner scanner, TaskService taskService) {
+    public NoteMenu(Scanner scanner, NoteService noteService) {
         this.scanner = scanner;
-        this.taskService = taskService;
+        this.noteService = noteService;
     }
 
-    private void start() {
+    public void start() {
         int option = -1;
 
         while (option != 0) {
@@ -75,7 +76,7 @@ public class NoteMenu {
 
         List<NoteOutputDTO> notesList = List.of();
         try {
-            notesList = noteServie.getAllNotes();
+            notesList = noteService.getAllNotes();
             printNoteList(notesList);
         } catch (Exception e) {
             MenuExceptionHandler.handle(e);

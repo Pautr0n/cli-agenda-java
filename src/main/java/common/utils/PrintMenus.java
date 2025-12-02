@@ -1,5 +1,6 @@
 package common.utils;
 
+import note.dto.NoteOutputDTO;
 import task.dto.TaskOutputDTO;
 
 import java.time.LocalDate;
