@@ -76,13 +76,17 @@ public class TaskMenu {
 
         }
 
-        System.out.print("Prioridad (LOW, MEDIUM, HIGH): ");
-        String priorityText = scanner.nextLine().toUpperCase();
-        if (!priorityText.equals("LOW") && !priorityText.equals("MEDIUM") && !priorityText.equals("HIGH")) {
-            System.out.println("Invalid priority. Usa LOW, MEDIUM o HIGH.");
-            return;
-        }
+        String priorityText;
 
+        while(true){
+            System.out.print("Prioridad (LOW, MEDIUM, HIGH): ");
+            priorityText = scanner.nextLine().toUpperCase();
+            if (!priorityText.equals("LOW") && !priorityText.equals("MEDIUM") && !priorityText.equals("HIGH")) {
+                System.out.println("Invalid priority. Usa LOW, MEDIUM o HIGH.");
+            } else{
+                break;
+            }
+        }
 
         TaskDTO dto = new TaskDTO(title, content, expirationDate, priorityText);
 
