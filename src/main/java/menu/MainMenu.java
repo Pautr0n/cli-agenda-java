@@ -1,7 +1,7 @@
 package menu;
 
 import common.utils.PrintMenus;
-import menu.TaskMenu;
+import note.service.NoteService;
 import task.service.TaskService;
 
 import java.util.Scanner;
@@ -10,10 +10,12 @@ public class MainMenu {
 
     private final Scanner scanner;
     private final TaskService taskService;
+    private final NoteService noteService;
 
-    public MainMenu(Scanner scanner, TaskService taskService) {
+    public MainMenu(Scanner scanner, TaskService taskService, NoteService noteService) {
         this.scanner = scanner;
         this.taskService = taskService;
+        this.noteService = noteService;
     }
 
     public void start() {
@@ -39,7 +41,8 @@ public class MainMenu {
                 }
 
                 case 2 -> {
-                    System.out.println(" Menú de notas pendiente.");
+                    NoteMenu noteMenu = new NoteMenu(scanner, noteService);
+                    noteMenu.start();
                 }
 
                 case 3 -> {
