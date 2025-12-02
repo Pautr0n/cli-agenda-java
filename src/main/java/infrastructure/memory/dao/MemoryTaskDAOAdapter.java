@@ -2,6 +2,7 @@ package infrastructure.memory.dao;
 
 import common.dao.GenericDAO;
 import common.exception.DataAccessException;
+import common.exception.EntityNotFoundException;
 import task.model.Task;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.File;
@@ -42,7 +43,7 @@ public class MemoryTaskDAOAdapter implements GenericDAO<Task> {
     @Override
     public void update(Task task) {
         if (!tasks.containsKey(task.getId())) {
-            throw new DataAccessException("Task with id " + task.getId() + " not found");
+            throw new EntityNotFoundException("Task with id " + task.getId() + " not found");
         }
         tasks.put(task.getId(), task);
         saveToFile();
@@ -51,7 +52,7 @@ public class MemoryTaskDAOAdapter implements GenericDAO<Task> {
     @Override
     public void delete(int id) {
         if (tasks.remove(id) == null) {
-            throw new DataAccessException("Task with id " + id + " not found");
+            throw new EntityNotFoundException("Task with id " + id + " not found");
         }
         saveToFile();
     }
@@ -60,7 +61,7 @@ public class MemoryTaskDAOAdapter implements GenericDAO<Task> {
         try {
             mapper.writeValue(storageFile, tasks.values());
         } catch (IOException e) {
-            throw new DataAccessException("Error saving tasks to file", e);
+            throw new DataAccessException("DAO error [writeValue]: Error saving tasks to file", e);
         }
     }
 
@@ -73,7 +74,7 @@ public class MemoryTaskDAOAdapter implements GenericDAO<Task> {
                     idGenerator.set(Math.max(idGenerator.get(), t.getId() + 1));
                 }
             } catch (IOException e) {
-                throw new DataAccessException("Error loading tasks from file", e);
+                throw new DataAccessException("DAO error [load]: Error loading tasks from file", e);
             }
         }
     }
