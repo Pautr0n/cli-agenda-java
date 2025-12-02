@@ -2,12 +2,13 @@ package menu;
 
 import common.exception.MenuExceptionHandler;
 import common.exception.ValidationException;
-import common.utils.FormatValidator;
 import common.utils.PrintMenus;
+import note.dto.NoteDTO;
+import note.dto.NoteIdDTO;
+import note.dto.NoteOutputDTO;
+import note.dto.NoteUpdateDTO;
 import task.dto.TaskDTO;
 import task.dto.TaskIdDTO;
-import task.dto.TaskOutputDTO;
-import task.dto.TaskUpdateDTO;
 import task.service.TaskService;
 
 import java.util.List;
@@ -29,16 +30,15 @@ public class NoteMenu {
         int option = -1;
 
         while (option != 0) {
-            PrintMenus.showNoteMenu(); // método estático que imprime el menú de notas
+            PrintMenus.showNoteMenu();
 
-            // Validar que el usuario introduzca un número
             while (!scanner.hasNextInt()) {
                 System.out.print("Por favor, introduce un número válido: ");
-                scanner.nextLine(); // limpiar entrada inválida
+                scanner.nextLine();
             }
 
             option = scanner.nextInt();
-            scanner.nextLine(); // limpiar buffer
+            scanner.nextLine();
 
             switch (option) {
                 case 1 -> createNote();
@@ -61,10 +61,10 @@ public class NoteMenu {
         System.out.print("Content: ");
         String content = scanner.nextLine();
 
-        NoteDTO dto = new TaskDTO(title, content);
+        NoteDTO dto = new NoteDTO(title, content);
 
         try {
-            NoteOutputDTO dtoOutput = NoteService.createNote(dto);
+            NoteOutputDTO dtoOutput = noteService.createNote(dto);
             printMenuCreateNote(dtoOutput);
         } catch (Exception e) {
             MenuExceptionHandler.handle(e);
@@ -165,7 +165,7 @@ public class NoteMenu {
         int id = scanner.nextInt();
         scanner.nextLine();
 
-        NoteIdDTO dto = new TaskIdDTO(id);
+        NoteIdDTO dto = new NoteIdDTO(id);
 
         try {
             NoteOutputDTO dtoOutput = noteService.getNoteById(dto);
