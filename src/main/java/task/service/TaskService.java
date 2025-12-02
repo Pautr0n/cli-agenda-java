@@ -37,10 +37,8 @@ public class TaskService {
         try {
             validateTaskDTOCreate(dto);
 
-            Task task = TaskDTOMapper.dtoToTask(dto);  //PAU: modificado el Mapper:
-            task = taskRepository.add(task); //como ahora el método insert() devuelve la entidad con el ID la asigno a task para que cree el dto
-            //Aqui modificar la clase Repository y la clase DAO para que devuelvan Task y así poder imprimir la Task con ID
-            //task = taskRepository.add(task);
+            Task task = TaskDTOMapper.dtoToTask(dto);
+            task = taskRepository.add(task);
 
             return TaskDTOMapper.taskToDTO(task);
 

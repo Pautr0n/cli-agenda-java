@@ -1,6 +1,7 @@
 package menu;
 
 import common.exception.*;
+import common.utils.FormatValidator;
 import task.dto.TaskDTO;
 import task.dto.TaskIdDTO;
 import task.dto.TaskOutputDTO;
@@ -8,6 +9,7 @@ import task.dto.TaskUpdateDTO;
 import task.service.TaskService;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
@@ -207,12 +209,23 @@ public class TaskMenu {
                     content = scanner.nextLine();
                 }
                 case 3 -> {
-                    System.out.print("New Expiration Date (YYYY-MM-DD): ");
-                    expirationDate = scanner.nextLine();
+                    boolean checkDate = false;
+                    while(checkDate == false){
+                        System.out.print("New Expiration Date (YYYY-MM-DD): ");
+                        expirationDate = scanner.nextLine();
+                        checkDate = FormatValidator.isValidLocalDate(expirationDate);
+                        if(!checkDate) System.out.println("Date Format not valid. Try again.");
+                    }
                 }
                 case 4 -> {
-                    System.out.print("New priority (LOW, MEDIUM, HIGH): ");
-                    priorityText = scanner.nextLine();
+                    boolean checkPriority = false;
+                    while(checkPriority == false){
+                        System.out.print("New priority (LOW, MEDIUM, HIGH): ");
+                        priorityText = scanner.nextLine();
+                        checkPriority = FormatValidator.isValidPriority(priorityText);
+                        if(!checkPriority) System.out.println(priorityText + " is not a valid priority. Try again.");
+                    }
+
                 }
                 case 0 -> System.out.println("Exiting Update Menu!");
                 default -> System.out.println("Invalid Option.");
@@ -263,4 +276,5 @@ public class TaskMenu {
             MenuExceptionHandler.handle(e);
         }
     }
+
 }
