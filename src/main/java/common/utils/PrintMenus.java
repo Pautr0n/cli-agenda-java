@@ -4,9 +4,12 @@ import note.dto.NoteOutputDTO;
 import task.dto.TaskOutputDTO;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class PrintMenus {
+
+    private static final DateTimeFormatter TIMEFORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static void showTaskMenu() {
         System.out.println("\n ***** MENÚ DE TAREAS ****");
@@ -102,6 +105,7 @@ public class PrintMenus {
             System.out.println("---------------------------------->");
             System.out.println("ID: " + dto.id());
             System.out.println("Título: " + dto.title());
+            System.out.println("Fecha Límite: " + dto.expirationDate());
 
         }
     }
@@ -116,7 +120,7 @@ public class PrintMenus {
             System.out.println("---------------------------------->");
             System.out.println("ID: " + dto.id());
             System.out.println("Título: " + dto.title());
-
+            System.out.println("Fecha Creación: " + dto.creationDate().format(TIMEFORMATTER));
         }
     }
 
