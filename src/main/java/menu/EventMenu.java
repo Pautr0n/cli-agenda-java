@@ -116,16 +116,14 @@ public class EventMenu implements ExpirableObserver<EventOutputDTO> {
 
 
     private void listExpiredEvents() {
-        List<EventOutputDTO> expiredNow = expirableService.notifyExpired(eventChecker);
 
-        if (expiredNow.isEmpty()) {
+        if(lastExpired.isEmpty()){
             System.out.println("No hay eventos caducados.");
-        } else {
-            System.out.println("*** EVENTOS CADUCADOS (" + expiredNow.size() + ") ***");
-            expiredNow.forEach(t ->
-                    System.out.println("⚠️ Evento caducado: " + t.title() + " (ID: " + t.id() + ")")
-            );
+        }else{
+            System.out.println("*** EVENTOS CADUCADOS (" + lastExpired.size() + ") ***");
+            lastExpired.forEach(t->System.out.println("⚠️ Evento caducado: " + t.title() + " (ID: " + t.id() + ")"));
         }
+
     }
 
     private void getEventById() {
