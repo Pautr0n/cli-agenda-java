@@ -23,25 +23,6 @@ public class EventDTOMapper {
         return event;
     }
 
-    public static Event dtoToEvent(EventUpdateDTO dto) {
-        if (dto == null) {
-            throw new IllegalArgumentException("EventUpdateDTO cannot be null");
-        }
-
-        Event event = new Event();
-        event.setId(dto.id());
-
-
-        if (dto.title() != null && !dto.title().isBlank()) {
-            event.setTitle(dto.title());
-        }
-
-        if (dto.content() != null && !dto.content().isBlank()) {
-            event.setContent(dto.content());
-        }
-
-        return event;
-    }
 
     public static EventOutputDTO eventToDTO(Event event) {
         if (event == null) {
