@@ -13,7 +13,6 @@ import event.model.Event;
 import event.repository.EventRepository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class EventService {
@@ -63,9 +62,7 @@ public class EventService {
     // Read ALL EVENT
     public List<EventOutputDTO> getAllEvents() {
         try {
-            return eventRepository.getAll().stream()
-                    .map(EventDTOMapper::eventToDTO)
-                    .toList();
+            return eventRepository.getAll().stream().map(EventDTOMapper::eventToDTO).toList();
 
         } catch (DataAccessException e) {
             throw e;
@@ -166,11 +163,7 @@ public class EventService {
             throw new ValidationException("Invalid id: " + dto.id());
         }
 
-        if (
-                (dto.title() == null || dto.title().isBlank()) &&
-                (dto.content() == null || dto.content().isBlank()) &&
-                (dto.expirationDate() == null || dto.expirationDate().isBlank())
-        ) {
+        if ((dto.title() == null || dto.title().isBlank()) && (dto.content() == null || dto.content().isBlank()) && (dto.expirationDate() == null || dto.expirationDate().isBlank())) {
             throw new ValidationException("No fields provided to update");
         }
 
