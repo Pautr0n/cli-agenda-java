@@ -274,6 +274,7 @@ public class TaskMenu {
                     case "S"->{
                         taskService.deleteTask(dto);
                         printDeleteTask(id);
+                        return;
                     }
                     case "N"-> {
                         System.out.println("Aborting delete task");
