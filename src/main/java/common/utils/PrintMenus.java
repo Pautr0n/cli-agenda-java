@@ -1,9 +1,12 @@
 package common.utils;
 
+import event.dto.EventOutputDTO;
+import menu.EventMenu;
 import menu.TaskMenu;
 import note.dto.NoteOutputDTO;
 import task.dto.TaskOutputDTO;
 
+import java.awt.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -32,6 +35,18 @@ public class PrintMenus {
         System.out.println("3. Ver nota por ID");
         System.out.println("4. Actualizar nota");
         System.out.println("5. Eliminar nota");
+        System.out.println("0. Volver");
+        System.out.print("Elige una opción: \n");
+    }
+
+    public static void showEventMenu() {
+        System.out.println("\n ***** MENÚ DE EVENTOS ****");
+        System.out.println("1. Crear evento");
+        System.out.println("2. Listar eventos");
+        System.out.println("3. Ver evento por ID");
+        System.out.println("4. Actualizar evento");
+        System.out.println("5. Eliminar evento");
+        System.out.println("6. Listar eventos caducados: actualmente existen " + EventMenu.getExpiredCount() + " eventos caducados.");
         System.out.println("0. Volver");
         System.out.print("Elige una opción: \n");
     }
@@ -82,6 +97,17 @@ public class PrintMenus {
         System.out.println("|___________________________________________________");
     }
 
+    public static void printMenuCreateEvent(EventOutputDTO dto) {
+
+        System.out.println(" __________________________________________________");
+        System.out.println("| ID: " + dto.id());
+        System.out.println("| Título: " + dto.title());
+        System.out.println("| Contenido: " + dto.content());
+        System.out.println("| Fecha Límite: " + dto.expirationDate());
+        System.out.println("|___________________________________________________");
+
+    }
+
 
     //MENU INTERNO LIST TASK
     public static void printMenuListTask (){
@@ -126,6 +152,22 @@ public class PrintMenus {
         }
     }
 
+    public static void printEventList(List<EventOutputDTO> events) {
+
+        if (events.isEmpty()) {
+            System.out.println("No hay eventos para mostrar.");
+            return;
+        }
+        System.out.println("\n***LISTADO DE EVENTOS***");
+        for (EventOutputDTO dto : events) {
+            System.out.println("---------------------------------->");
+            System.out.println("ID: " + dto.id());
+            System.out.println("Título: " + dto.title());
+            System.out.println("Fecha Límite: " + dto.expirationDate());
+
+        }
+    }
+
 
     //MENSAJE TASCA MARCADA COMO COMPLETADA
     public static void printMarkTask(TaskOutputDTO dto){
@@ -158,6 +200,16 @@ public class PrintMenus {
         System.out.println("| 0- Salir y aceptar cambios");
     }
 
+    public static void printMenuUpdateEvent(){
+
+        System.out.println("\n| ¿Qué contenido deseas modificar?");
+        System.out.println("| 1- Título");
+        System.out.println("| 2- Contenido");
+        System.out.println("| 3- Fecha");
+        System.out.println("| 0- Salir y aceptar cambios.");
+
+    }
+
 
     // IMPRESION UPDATE TASK
     public static void printMenuTaskUpdated(TaskOutputDTO dto) {
@@ -184,6 +236,18 @@ public class PrintMenus {
 
     }
 
+    public static void printMenuEventUpdated(EventOutputDTO dto) {
+        System.out.println("***EVENTO ACTUALIZADA***");
+        System.out.println(" __________________________________________________");
+        System.out.println("| ID: " + dto.id());
+        System.out.println("| Título: " + dto.title());
+        System.out.println("| Contenido: " + dto.content());
+        System.out.println("| Fecha: " + dto.expirationDate());
+        System.out.println("|___________________________________________________");
+
+
+    }
+
     //IMPRESIÓN DELETE TASK
 
     //MENSAJE TASCA MARCADA COMO ELIMINADA
@@ -198,6 +262,13 @@ public class PrintMenus {
         System.out.println(" ___________________________________________________");
         System.out.println("| Nota con ID: " + id + " Eliminada correctamente!");
         System.out.println("|___________________________________________________");
+    }
+
+    public static void printDeleteEvent(int id){
+        System.out.println(" ___________________________________________________");
+        System.out.println("| Evento con ID: " + id + " Eliminada correctamente!");
+        System.out.println("|___________________________________________________");
+
     }
 
 }

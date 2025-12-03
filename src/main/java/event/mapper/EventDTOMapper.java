@@ -4,6 +4,8 @@ import event.dto.EventDTO;
 import event.dto.EventOutputDTO;
 import event.dto.EventUpdateDTO;
 import event.model.*;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class EventDTOMapper {
@@ -16,8 +18,8 @@ public class EventDTOMapper {
         Event event = new Event();
         event.setTitle(dto.title());
         event.setContent(dto.content());
-        event.setCreationDate(dto.creationDate() != null ? dto.creationDate() : LocalDateTime.now());
-        event.setExpirationDate(dto.expirationDate());
+        event.setCreationDate(LocalDateTime.now());
+        event.setExpirationDate(LocalDate.parse(dto.expirationDate()));
         return event;
     }
 

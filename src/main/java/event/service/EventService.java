@@ -13,6 +13,7 @@ import event.model.Event;
 import event.repository.EventRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class EventService {
@@ -92,6 +93,10 @@ public class EventService {
                 event.setContent(dto.content());
             }
 
+            if (dto.expirationDate() != null && !dto.expirationDate().isBlank()) {
+                event.setExpirationDate(LocalDate.parse(dto.expirationDate()));
+            }
+
             eventRepository.update(event);
 
             return EventDTOMapper.eventToDTO(event);
@@ -131,21 +136,11 @@ public class EventService {
             throw new ValidationException("Title cannot be empty");
         }
 
-        if (dto.creationDate() == null) {
-            throw new ValidationException("Creation date cannot be null");
-        }
-
         if (dto.expirationDate() == null) {
             throw new ValidationException("Expiration date cannot be null");
         }
-        //RECOMENDACION DEEP SEEK!
-        // Validar que expirationDate no sea anterior a creationDate
-        if (dto.expirationDate().isBefore(dto.creationDate().toLocalDate())) {
-            throw new ValidationException("Expiration date cannot be before creation date");
-        }
 
-        // Opcional: validar que expirationDate no sea en el pasado
-        if (dto.expirationDate().isBefore(LocalDate.now())) {
+        if (LocalDate.parse(dto.expirationDate()).isBefore(LocalDate.now())) {
             throw new ValidationException("Expiration date cannot be in the past");
         }
     }
@@ -171,9 +166,16 @@ public class EventService {
             throw new ValidationException("Invalid id: " + dto.id());
         }
 
-        if ((dto.title() == null || dto.title().isBlank()) &&
-                (dto.content() == null || dto.content().isBlank())) {
+        if (
+                (dto.title() == null || dto.title().isBlank()) &&
+                (dto.content() == null || dto.content().isBlank()) &&
+                (dto.expirationDate() == null || dto.expirationDate().isBlank())
+        ) {
             throw new ValidationException("No fields provided to update");
+        }
+
+        if (LocalDate.parse(dto.expirationDate()).isBefore(LocalDate.now())) {
+            throw new ValidationException("Expiration date cannot be in the past");
         }
     }
 }

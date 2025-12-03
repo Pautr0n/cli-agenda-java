@@ -1,6 +1,10 @@
 package application;
 import common.dao.GenericDAO;
+import event.model.Event;
+import event.repository.EventRepository;
+import event.service.EventService;
 import infrastructure.sql.connection.DBConnection;
+import infrastructure.sql.dao.MySQLEventDAOAdapter;
 import infrastructure.sql.dao.MySQLNoteDAOAdapter;
 import infrastructure.sql.dao.MySQLTaskDAOAdapter;
 import menu.MainMenu;
@@ -17,10 +21,16 @@ import java.util.Scanner;
 public class MainApp {
 
     private Scanner scanner;
+
     private TaskRepository taskRepository;
     private TaskService taskService;
+
     private NoteRepository noteRepository;
     private NoteService noteService;
+
+    private EventRepository eventRepository;
+    private EventService eventService;
+
     private MainMenu mainMenu;
 
     //inicializar dependencias1
@@ -33,17 +43,20 @@ public class MainApp {
         // 2. Crear DAO concreto usando la conexión
         GenericDAO<Task> taskDao = new MySQLTaskDAOAdapter(connection);
         GenericDAO<Note> noteDao = new MySQLNoteDAOAdapter(connection);
+        GenericDAO<Event> eventDao = new MySQLEventDAOAdapter(connection);
 
         // 3. Crear repositorio pasando el DAO
         taskRepository = new TaskRepository(taskDao);
         noteRepository = new NoteRepository(noteDao);
+        eventRepository = new EventRepository(eventDao);
 
         // 4. Crear servicio pasando el repositorio
         taskService = new TaskService(taskRepository);
         noteService = new NoteService(noteRepository);
+        eventService = new EventService(eventRepository);
 
         // 5. Crear el menú principal
-        mainMenu = new MainMenu(scanner, taskService, noteService);
+        mainMenu = new MainMenu(scanner, taskService, noteService, eventService);
 
     }
 
