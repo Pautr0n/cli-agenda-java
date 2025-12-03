@@ -62,7 +62,7 @@ public class PrintMenus {
         System.out.println("| ID: " + dto.id());
         System.out.println("| Título: " + dto.title());
         System.out.println("| Contenido: " + dto.content());
-        System.out.println("| Fecha: " + dto.expirationDate());
+        System.out.println("| Fecha Límite: " + dto.expirationDate());
         System.out.println("| Prioridad: " + dto.priority());
         System.out.println("| Estado: " + dto.doneStatus());
         System.out.println("|___________________________________________________");
