@@ -307,15 +307,11 @@ public class TaskMenu implements ExpirableObserver<TaskOutputDTO> {
     }
 
     private void listExpiredTasks() {
-        List<TaskOutputDTO> expiredNow = expirableService.notifyExpired(taskChecker);
-
-        if (expiredNow.isEmpty()) {
+        if(lastExpired.isEmpty()){
             System.out.println("No hay tareas caducadas.");
-        } else {
-            System.out.println("*** TAREAS CADUCADAS (" + expiredNow.size() + ") ***");
-            expiredNow.forEach(t ->
-                    System.out.println("⚠️ Tarea caducada: " + t.title() + " (ID: " + t.id() + ")")
-            );
+        }else{
+            System.out.println("*** TAREAS CADUCADAS (" + lastExpired.size() + ") ***");
+            lastExpired.forEach(t->System.out.println("⚠️ Tarea caducada: " + t.title() + " (ID: " + t.id() + ")"));
         }
     }
 
