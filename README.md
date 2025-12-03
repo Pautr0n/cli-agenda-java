@@ -1,167 +1,243 @@
 # CLI Agenda Java
 
-Este proyecto consiste en una agenda desarrollada en Java que permite gestionar tareas, eventos y notas desde una aplicación ejecutable por consola. El objetivo es ofrecer una herramienta modular y extensible, con persistencia de datos en una base de datos SQL, ejecución mediante Docker y pruebas automatizadas con JUnit 5.
+Aplicación de **agenda por consola desarrollada en Java 21** para la gestión de **tareas, eventos y notas**, con **persistencia en base de datos SQL**, arquitectura en capas, organización por features, ejecución mediante **Docker** y **testing con JUnit 5**.
 
-## Características principales
+Proyecto desarrollado como trabajo final en equipo aplicando buenas prácticas de diseño, modularidad y separación de responsabilidades.
 
-- Gestión de **tareas**
-  - Crear, actualizar, eliminar
-  - Listar todas, pendientes o completadas
-  - Marcar como completadas
-  - Persistencia en base de datos
+---
 
-- Gestión de **eventos**
-  - Crear, listar, actualizar, eliminar
-  - Listar próximos eventos
-  - Persistencia en base de datos
+## Funcionalidades
 
-- Gestión de **notas**
-  - Crear, listar, actualizar, eliminar
-  - Persistencia en base de datos
+### Gestión de Tareas
 
-- Arquitectura modular basada en estructura por features
-- Contenedorización con Docker
-- Testing con JUnit 5
+* Crear, actualizar y eliminar tareas
+* Listar todas las tareas
+* Listar tareas pendientes y completadas
+* Marcar tareas como completadas
+* Persistencia en base de datos SQL
+
+### Gestión de Eventos
+
+* Crear, listar, actualizar y eliminar eventos
+* Listar próximos eventos
+* Persistencia en base de datos SQL
+
+### Gestión de Notas
+
+* Crear, listar, actualizar y eliminar notas
+* Persistencia en base de datos SQL
+
+### Otras características
+
+* Arquitectura en capas
+* Organización por features (task, event, note)
+* Patrón DAO
+* Uso de DTOs y Mappers
+* Manejo de excepciones personalizado
+* Aplicación CLI con menús interactivos
+* Base de datos en contenedor Docker
+* Scripts automáticos de creación y carga de datos
+* Proyecto gestionado con Maven
+
+---
 
 ## Tecnologías utilizadas
 
-| Tecnología | Uso |
-|------------|-----|
-| **Java 21** | Lógica de aplicación |
-| **Maven** | Gestión del proyecto y dependencias |
-| **SQL** | Persistencia de datos |
-| **JUnit 5** | Testing |
-| **Docker** | Ejecución y despliegue en contenedores |
+| Tecnología             | Uso                   |
+| ---------------------- | --------------------- |
+| Java 21                | Lógica de negocio     |
+| Maven                  | Gestión del proyecto  |
+| SQL                    | Persistencia de datos |
+| PostgreSQL (en Docker) | Base de datos         |
+| Docker                 | Contenedorización     |
+| JUnit 5                | Testing               |
 
-## Requisitos previos
+---
 
-Antes de ejecutar el proyecto es necesario tener instalado:
+## Arquitectura del Proyecto
 
-- Java 21 o superior
-- Maven
-- Docker (para ejecución en contenedor)
-- Acceso a una base de datos SQL (o imagen Docker configurada)
+El proyecto sigue una **arquitectura en capas**, organizada además por **features**:
 
-```markdown
-```markdown
-## Instalación y ejecución
+* **application** → punto de entrada (`MainApp`)
+* **model** → entidades del dominio
+* **dto** → objetos de transferencia de datos
+* **mapper** → conversión entre DTO y modelo
+* **repository / dao** → acceso a datos
+* **service** → lógica de negocio
+* **menu** → menús de consola
+* **common** → utilidades, validaciones, excepciones, factorías
+* **infrastructure** → implementación de persistencias (SQL, memoria, MongoDB preparadas)
 
-Clonar el repositorio:
+Además:
+
+* Patrón **DAO + Factory**
+* Interfaz común **CrudAgenda**
+* Excepciones personalizadas por capa
+
+## Patrones de diseño
+
+En el desarrollo del proyecto se ha tenido la **intención de aplicar los siguientes patrones de diseño**:
+
+- **Patrón Factory**: para centralizar la creación de los repositorios y desacoplar la lógica de negocio del tipo de persistencia utilizada.
+- **Patrón Observer**: aplicado en la gestión de eventos para notificar cambios de estado dentro del sistema.
+
+
+
+---
+
+## Estructura del Proyecto
+
+```
+cli-agenda-java
+├── mysql-init
+│   ├── 00-create-database.sql
+│   ├── 01-create-task-table.sql
+│   ├── 02-sample-task.sql
+│   ├── 03-create-note-table.sql
+│   ├── 04-sample-note.sql
+│   ├── 05-create-event-table.sql
+│   └── 06-sample-event.sql
+│
+├── src/main/java
+│   ├── application
+│   │   └── MainApp
+│
+│   ├── common
+│   │   ├── dao
+│   │   ├── exception
+│   │   ├── factory
+│   │   ├── repository
+│   │   └── utils
+│
+│   ├── event
+│   │   ├── dto
+│   │   ├── mapper
+│   │   ├── model
+│   │   ├── repository
+│   │   └── service
+│
+│   ├── note
+│   │   ├── dto
+│   │   ├── mapper
+│   │   ├── model
+│   │   ├── repository
+│   │   └── service
+│
+│   ├── task
+│   │   ├── dto
+│   │   ├── enums
+│   │   ├── mapper
+│   │   ├── model
+│   │   ├── repository
+│   │   └── service
+│
+│   ├── infrastructure
+│   │   ├── memory
+│   │   ├── mongodb
+│   │   └── sql
+│
+│   └── menu
+│       ├── MainMenu
+│       ├── TaskMenu
+│       ├── EventMenu
+│       └── NoteMenu
+│
+└── src/main/resources
+    └── db.properties
+```
+
+---
+
+## Persistencia
+
+* Base de datos **SQL ejecutándose en Docker**
+* Inicialización automática mediante scripts:
+
+    * Creación de base de datos
+    * Creación de tablas
+    * Inserción de datos de ejemplo
+* Configuración de conexión en `db.properties`
+
+---
+
+## Requisitos Previos
+
+* Java 21
+* Maven
+* Docker
+* Acceso al contenedor de base de datos
+
+---
+
+## Instalación y Ejecución
+
+### Clonar el repositorio
 
 ```bash
-git clone <URL_DEL_REPO>
+git clone <URL_DEL_REPOSITORIO>
 cd cli-agenda-java
 ```
 
-### Ejecutar en modo desarrollo
+---
 
-Compilar y arrancar:
+### Construir el proyecto
 
 ```bash
 mvn clean package
+```
+
+---
+
+### Ejecutar la aplicación
+
+```bash
 java -jar target/cli-agenda-java.jar
 ```
 
-### Ejecutar con Docker (cuando esté configurado)
+---
 
-Construir imagen:
+### Ejecutar con Docker
 
 ```bash
 docker build -t cli-agenda-java .
-```
-
-Ejecutar contenedor:
-
-```bash
 docker run cli-agenda-java
 ```
 
+---
 
+## Testing
+
+El proyecto incluye **tests unitarios con JUnit 5**.
+Para ejecutarlos:
+
+```bash
+mvn test
 ```
-```
-## Estructura del Proyecto
-```markdown
-# Classes del proyecto
 
-## Modelos
+---
 
-* Clase Evento - Patron Observer
-* Clase Tarea
-* Clase Nota
-* Clase Agenda
-
-## Métodos:
-
-### **Evento:**
-
-* Actualizar (evento) - Común a todos
-* persistir (evento) - Común a todos
-* crear (evento) - Común a todos
-* eliminar (evento) - Común a todos
-* listas proximos (evento) - Común a todos
-
-### **Tarea:**
-
-* actualizar una tarea - Común a todos
-* listar todas las tareas - Común a todos
-* listar tareas completadas - Común a todos
-* listas tareas pendientes - Común a todos
-* marcar una tarea como completada. Propio de Clase
-* eliminar una tarea - Común a todos
-* persistir tareas - Común a todos
-* crear una nueva tarea - Común a todos
-
-### **Nota:**
-
-* listas notas - Común a todos
-* persistir notas - Común a todos
-* eliminar una nota - Común a todos
-* actualizar una nota - Común a todos
-* crea una nota - Común a todos
-
-## Interfaz/Clase Abstracta: CrudAgenda (Crear, Eliminar, Leer, Actualizar, Persistir).
-
-## Controladores:
-
-* GestorEvento
-* GestorTarea
-* GestorNota
-* GestorBaseDatos
-
-## Vista:
-
-* Menus y sub Menus.
-
-
-```
 ## Autores
 
-Desarrolladores del equipo:
+Proyecto desarrollado por:
 
-- Pau Gaston Boza
-- Andres Rouge
-- Jordi Casas González
+* Pau Gaston Boza
+* Andres Rouge
+* Jordi Casas González
 
-## Próximas mejoras
-
-- Implementación del contenedor Docker con base de datos incluida
-- Comandos CLI interactivos
-- Posible interfaz gráfica o API (pendiente de decidir)
-- Documentación extendida en Wiki
-
+---
 
 ## Wiki 📚
 
-El proyecto puede incluir una Wiki para documentar aspectos más detallados como:
+El proyecto dispone de una **Wiki completa** donde se documentan:
 
-- Guía de instalación avanzada
-- Documentación de endpoints o módulos internos
-- Diagramas de arquitectura
-- Manual para contribución
+* Guía de instalación avanzada
+* Arquitectura del sistema
+* Diagramas de diseño
+* Manual de uso de la aplicación
+* Guía de contribución
 
-La creación de la Wiki está pendiente de decisión del equipo y podrá activarse más adelante desde GitHub.
-
+---
 
 ## Licencia
 
-Pendiente de definir.
+Este proyecto **no dispone actualmente de licencia definida**.
