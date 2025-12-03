@@ -33,7 +33,7 @@ public class TaskMenu implements ExpirableObserver<TaskOutputDTO> {
         this.scanner = scanner;
         this.taskService = taskService;
 
-        this.expirableService = new ExpirableService<>(() -> taskService.getAllTasks());
+        this.expirableService = new ExpirableService<>(taskService::getAllTasks);
         this.taskChecker = new TaskChecker();
         this.expirableService.addObserver(this);
 
@@ -326,7 +326,7 @@ public class TaskMenu implements ExpirableObserver<TaskOutputDTO> {
 
     @Override
     public void onExpired(List<TaskOutputDTO> expiredEntities) {
-        this.expiredCount = expiredEntities.size();
+        expiredCount = expiredEntities.size();
         this.lastExpired = expiredEntities;
 
     }
