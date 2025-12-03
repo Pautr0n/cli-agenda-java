@@ -181,6 +181,7 @@ public class NoteMenu {
                     case "S"->{
                         noteService.deleteNote(dto);
                         printDeleteNote(id);
+                        return;
                     }
                     case "N"-> {
                         System.out.println("Aborting delete note");
