@@ -1,4 +1,8 @@
 package event.dto;
 
-public record EventDTO() {
-}
+public record EventDTO(
+        String title,
+        String content,
+        String expirationDate
+
+) { }

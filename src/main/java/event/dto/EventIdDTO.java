@@ -1,4 +1,5 @@
 package event.dto;
 
-public record EventIdDTO() {
-}
+public record EventIdDTO(
+      Integer id
+) { }
