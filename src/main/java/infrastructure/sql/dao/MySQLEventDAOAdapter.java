@@ -97,6 +97,7 @@ public class MySQLEventDAOAdapter implements GenericDAO<Event> {
                 }else{
                     statement.setNull(3, Types.DATE);
                 }
+                statement.setInt(4,entity.getId());
                 int rows = statement.executeUpdate();
                 if(rows==0) throw new EntityNotFoundException("No Event found with id: "+ entity.getId());
 

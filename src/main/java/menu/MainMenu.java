@@ -1,6 +1,7 @@
 package menu;
 
 import common.utils.PrintMenus;
+import event.service.EventService;
 import note.service.NoteService;
 import task.service.TaskService;
 
@@ -11,11 +12,13 @@ public class MainMenu {
     private final Scanner scanner;
     private final TaskService taskService;
     private final NoteService noteService;
+    private final EventService eventService;
 
-    public MainMenu(Scanner scanner, TaskService taskService, NoteService noteService) {
+    public MainMenu(Scanner scanner, TaskService taskService, NoteService noteService, EventService eventService) {
         this.scanner = scanner;
         this.taskService = taskService;
         this.noteService = noteService;
+        this.eventService = eventService;
     }
 
     public void start() {
@@ -46,7 +49,8 @@ public class MainMenu {
                 }
 
                 case 3 -> {
-                    System.out.println("Menú de eventos pendiente.");
+                    EventMenu eventMenu = new EventMenu(scanner,eventService);
+                    eventMenu.start();
                 }
 
                 case 0 -> {
