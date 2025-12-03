@@ -1,5 +1,6 @@
 package common.utils;
 
+import menu.TaskMenu;
 import note.dto.NoteOutputDTO;
 import task.dto.TaskOutputDTO;
 
@@ -19,6 +20,7 @@ public class PrintMenus {
         System.out.println("4. Marcar tarea como completada");
         System.out.println("5. Actualizar tarea");
         System.out.println("6. Eliminar tarea");
+        System.out.println("7. Listar tareas caducadas: actualmente existen " + TaskMenu.getExpiredCount() + " tareas caducadas.");
         System.out.println("0. Volver");
         System.out.print("Elige una opción: \n");
     }
