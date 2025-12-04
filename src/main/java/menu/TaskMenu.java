@@ -1,11 +1,14 @@
 package menu;
 
 import common.exception.*;
+import common.observer.ExpirableObserver;
+import common.publisher.ExpirableService;
 import common.utils.FormatValidator;
 import task.dto.TaskDTO;
 import task.dto.TaskIdDTO;
 import task.dto.TaskOutputDTO;
 import task.dto.TaskUpdateDTO;
+import task.publisher.TaskChecker;
 import task.service.TaskService;
 
 import java.time.LocalDate;
@@ -15,21 +18,33 @@ import java.util.Scanner;
 
 import static common.utils.PrintMenus.*;
 
-public class TaskMenu {
+public class TaskMenu implements ExpirableObserver<TaskOutputDTO> {
 
     private final Scanner scanner;
     private final TaskService taskService;
+    private final ExpirableService<TaskOutputDTO> expirableService;
+    private final TaskChecker taskChecker;
+
+    private static int expiredCount = 0;
+    private List<TaskOutputDTO> lastExpired = List.of();
+
 
     public TaskMenu(Scanner scanner, TaskService taskService) {
         this.scanner = scanner;
         this.taskService = taskService;
+
+        this.expirableService = new ExpirableService<>(taskService::getAllTasks);
+        this.taskChecker = new TaskChecker();
+        this.expirableService.addObserver(this);
+
+
     }
 
     public void start() {
         int option = -1;
 
         while (option != 0) {
-
+            expirableService.notifyExpired(taskChecker);
             showTaskMenu();
 
             while (!scanner.hasNextInt()) {
@@ -47,6 +62,7 @@ public class TaskMenu {
                 case 4 -> markTaskCompleted();
                 case 5 -> updateTask();
                 case 6 -> deleteTask();
+                case 7 -> listExpiredTasks();
                 case 0 -> System.out.println("Going back to main menu...");
                 default -> System.out.println("Invalid option.");
             }
@@ -274,6 +290,7 @@ public class TaskMenu {
                     case "S"->{
                         taskService.deleteTask(dto);
                         printDeleteTask(id);
+                        return;
                     }
                     case "N"-> {
                         System.out.println("Aborting delete task");
@@ -288,5 +305,27 @@ public class TaskMenu {
             MenuExceptionHandler.handle(e);
         }
     }
+
+    private void listExpiredTasks() {
+        if(lastExpired.isEmpty()){
+            System.out.println("No hay tareas caducadas.");
+        }else{
+            System.out.println("*** TAREAS CADUCADAS (" + lastExpired.size() + ") ***");
+            lastExpired.forEach(t->System.out.println("⚠️ Tarea caducada: " + t.title() + " (ID: " + t.id() + ")"));
+        }
+    }
+
+    public static int getExpiredCount(){
+        return expiredCount;
+    }
+
+
+    @Override
+    public void onExpired(List<TaskOutputDTO> expiredEntities) {
+        expiredCount = expiredEntities.size();
+        this.lastExpired = expiredEntities;
+
+    }
+
 
 }
